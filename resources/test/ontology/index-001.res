@@ -1,0 +1,5 @@
+getrank = > [http://www.ag-csw.de/ontologies/index-001#Getränk]
+limonad = > [http://www.ag-csw.de/ontologies/index-001#Limonade]
+mineralwass = > [http://www.ag-csw.de/ontologies/index-001#Mineralwasser]
+gewurx = > [http://www.ag-csw.de/ontologies/index-001#Gewürz]
+lebensmittel = > [http://www.ag-csw.de/ontologies/index-001#Lebensmittel]

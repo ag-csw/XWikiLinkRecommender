@@ -1,0 +1,31 @@
+Enable Plug-in in XWiki
+- copy classes to XWIKI_HOME/WEB-INF/classes
+- modify XWIKI_HOME/WEB-INF/xwiki.cfg; in the section #-# List of active plugins add
+  the plug-in class name "de.csw.xwiki.plugin.OntologyPlugin" 
+
+Eclipse specific
+- the classpath in eclipse is configured for XWiki 1.7.1
+
+Configure Tomcat for Debugging
+- add the following options to the startup of tomcat
+	-Xdebug
+	-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n
+- in eclipse create a new Debug Configuration
+  - Go to "Run->Debug Configurations...".
+  - Click on "Remote Java Applications", then click "New".
+  - Type in the title and all.
+  - Notice that port 8000 from the Tomcat instructions.
+  - Save and run.
+
+Configure Jetty for Debugging
+- in the xWiki package there already exists a start file for debugging
+  - some lines corresponding to profiling have to be commented out
+- in eclipse create a new Debug Configuration
+  - Go to "Run->Debug Configurations...".
+  - Click on "Remote Java Applications", then click "New".
+  - Type in the title and all.
+  - Notice they use port 5005 as standard.
+  - Save and run.
+
+Documentation
+- xWiki API http://maven.xwiki.org/site/xwiki-core-parent/xwiki-core/apidocs/index.html

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns="http://www.ag-csw.de/ontologies/index-001#"
+  xml:base="http://www.ag-csw.de/ontologies/index-001">
+  <owl:Ontology rdf:about="">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Test, if indexing works at all.</rdfs:comment>
+  </owl:Ontology>
+  <owl:Class rdf:ID="Lebensmittel"/>
+  <owl:Class rdf:ID="Gewürz">
+    <rdfs:subClassOf rdf:resource="#Lebensmittel"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Limonade">
+    <rdfs:subClassOf rdf:resource="#Getränk"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Getränk">
+    <rdfs:subClassOf rdf:resource="#Lebensmittel"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Mineralwasser">
+    <rdfs:subClassOf rdf:resource="#Getränk"/>
+  </owl:Class>
+</rdf:RDF>

@@ -1,0 +1,2 @@
+http://www.ag-csw.de/ontologies/gewuerz#Petersilie
+http://www.ag-csw.de/ontologies/gewuerz#Küchenzwiebel

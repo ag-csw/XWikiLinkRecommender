@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     14.02.2009 08:19:53                                                        
+
+     XWiki annotation plug-in    
+     The plug-in indexes wiki-pages semantically while they are stored. Before
+     wiki pages are shown concepts are recognized and enhanced with links.
+                   
+     rheese                                                                
+     ====================================================================== -->
+<project name="XWiki annotation plug-in" default="default">
+	<description>
+		The plug-in indexes wiki-pages semantically while they are stored. Before
+		wiki pages are shown concepts are recognized and enhanced with links.
+    </description>
+
+	<!-- Give user a chance to override without editing this file or typing -D -->
+	<property file="${basedir}/build.properties.user" />
+	<property file="${basedir}/build.properties" />
+
+	<path id="classpath:build">
+		<fileset dir="${webapp.xwiki.dir}/WEB-INF/lib" includes="**/*.jar"/>
+		<fileset dir="${basedir}/lib" includes="**/*.jar"/>
+		<fileset dir="${basedir}/lib/build" includes="**/*.jar"/>
+	</path>
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="compile">
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: compile                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="compile" description="Compile the sources">
+		<mkdir dir="${build.dir}" />
+		<javac destdir="${build.dir}" source="1.5" deprecation="false" debug="true"
+				classpathref="classpath:build" encoding="UTF-8">
+			<src path="${src.java.dir}" />
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.java.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.properties.user" />
+			</fileset>
+		</copy>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.java.dir}">
+                <include name="**/*.html" />
+            </fileset>
+        </copy>
+		<copy todir="${build.dir}">
+			<fileset dir="${resources.dir}/ontology">
+				<include name="**/*.owl"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ================================= 
+          target: create-jar              
+         ================================= -->
+    <target name="create-jar" depends="compile" description="Create a jar file">
+        <jar destfile="${jar.file}" basedir="${build.dir}" />
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: compile-test                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="compile-test" depends="compile" description="Compile the sources">
+		<javac destdir="${build.dir}" source="1.5" deprecation="false" debug="true"
+				classpathref="classpath:build" encoding="UTF-8">
+			<src path="${src.test.dir}" />
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.test.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.properties.user" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- ================================= 
+          target: quickdeploy              
+         ================================= -->
+	<target name="quickdeploy" depends="compile,copy-libs" description="Copy classes to the web application server">
+		<copy todir="${webapp.xwiki.dir}/WEB-INF/classes">
+			<fileset dir="${build.dir}">
+				<exclude name="**/test/" />
+				<exclude name="test*" />
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- ================================= 
+          target: deploy              
+         ================================= -->
+	<target name="deploy" depends="quickdeploy" description="Copy classes to the web application server and touch web.xml">
+		<touch file="${webapp.xwiki.dir}/WEB-INF/web.xml" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy-libs
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy-libs" description="Copy our libraries to the web application server.">
+		<copy todir="${webapp.xwiki.dir}/WEB-INF/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+	</target>
+	
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" description="Remove the build directory">
+    	<delete dir="${build.dir}" />
+    </target>
+</project>

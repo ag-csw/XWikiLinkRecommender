@@ -1,0 +1,17 @@
+#  Please make build property modifications in this file.
+
+version = 1.0
+
+webapp.dir = /Volumes/MacBook_HD/Applications/XWiki Enterprise
+webapp.xwiki.dir = ${webapp.dir}/webapps/xwiki
+
+build.dir = ${basedir}/build
+jar.file = ontology-plugin-${version}.jar
+
+src.java.dir = ${basedir}/src/java
+src.test.dir = ${basedir}/src/test
+
+lib.dir = ${basedir}/lib
+resources.dir = ${basedir}/resources
+
+

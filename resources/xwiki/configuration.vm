@@ -1,0 +1,30 @@
+#set ($ontology = $xwiki.getPlugin("ontology"))
+
+#if (not $ontology)
+Error: Could not obtain instance of ontology plug-in
+#else
+
+#set ($enabled = $ontology.getEnabled())
+#set ($p_enabled = $request.getParameter("enabled"))
+
+#if ($p_enabled)
+  $ontology.setEnabled($p_enabled)
+  #set ($enabled = $ontology.getEnabled())
+#end
+
+1 Configuration of the ontology plug-in
+
+The plug-in is currently #if ($enabled == "false") in#{end}active.
+
+Change the preferences of the plug-in:
+
+<form action="$doc.name" method="get">
+  <label for="f_enabled">enabled</label>
+  <input type="radio" name="enabled" value="true" #if ($enabled == "true") checked #end id="f_enabled" />
+  <label for="f_disabled">disabled</label>
+  <input type="radio" name="enabled" value="false" #if ($enabled == "false") checked #end id="f_disabled" />
+
+  <input type="submit" value="Apply"/>
+</form>
+
+#end

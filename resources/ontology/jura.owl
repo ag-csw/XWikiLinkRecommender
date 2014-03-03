@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns="http://www.ag-csw.de/ontologies/jura#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xml:base="http://www.ag-csw.de/ontologies/jura">
+  <owl:Ontology rdf:about="">
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Created with TopBraid Composer</owl:versionInfo>
+  </owl:Ontology>
+  <owl:Class rdf:ID="rechtlicher_Anspruch">
+    <related>
+      <owl:Class rdf:ID="Schadenersatzrecht"/>
+    </related>
+  </owl:Class>
+  <owl:Class rdf:ID="Auflösungsvertrag">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Aufhebungsvertrag"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Vertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Pachtvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Gebrauchsüberlassungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Dienstvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Verdingungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Nutzungsentschädigung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Nutzungsentgelt"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Erfüllungsschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Schaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="regelmäßig_gezahltes_Arbeitsentgelt">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Arbeitsentgelt"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="laufend_gezahltes_Arbeitsentgelt"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="Wohnrechtevertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Gebrauchsüberlassungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="monatliches_Einkommen">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="regelmäßiges_Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Bezüge">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Verdienst"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Schadenersatzrechtsvokabular">
+    <invisible rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</invisible>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Schadenersatzrecht"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Arbeitsstelle">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Arbeitsrechtsvokabular"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Arbeitsplatz"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="Gesellschaftervertrag">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Gesellschaftsvertrag"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Vertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Sachschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Schaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Sonderzuwendung">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Einmalzahlungen"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Schadenersatzleistung">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Schadensersatz"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#regelmäßiges_Einkommen">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Arbeitseinkommen">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Arbeitslohn"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Arbeitsentgelt"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Verdienst"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="laufend_und_einmalig_gezahltes_Arbeitsentgelt"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="Heiratsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="vertragliches_Güterrecht"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Ehevertrag"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="allgemeines_Persönlichkeitsrecht">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Recht"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Einmalzahlungen">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Sonderzahlung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Verdienst">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Lohn"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Endgrundgehalt"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="jährliche_Sonderzahlung">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="jährliche_Sonderzuwendung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="jährliches_Einkommen"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Sonderzahlung"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="zweckbefristeter_Arbeitsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Arbeitsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Vertrag">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Werkvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Verdingungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Auftrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Verdingungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Personenschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Schaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Einkünfte">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Entgelt"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Einkommen"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="Mietvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Gebrauchsüberlassungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Aus-_und_Weiterbildung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsrechtsvokabular"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="berufliche_Entwicklung"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="fehlerhafte_Beratung">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Beratungsfehler"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#vertragliches_Güterrecht">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Ausbildung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#berufliche_Entwicklung"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Unterhaltsvereinbarung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Ehevertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Klage"/>
+  <owl:Class rdf:about="#Schadenersatzrecht">
+    <rdfs:subClassOf rdf:resource="#Recht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Schmerzengeld">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="immaterieller_Schadensersatzanspruch"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#laufend_gezahltes_Arbeitsentgelt">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsentgelt"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Lohn">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Endgrundgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass rdf:resource="#Verdienst"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Scheidungsfolgenvereinbarung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Ehevertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Aufhebungsvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+    <owl:equivalentClass rdf:resource="#Auflösungsvertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Fortbildung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#berufliche_Entwicklung"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Weiterbildung"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#Entgelt">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Vergütung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsrechtsvokabular"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Nettogehalt">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Monatsgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Nettolohn"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Dienstbezüge">
+    <rdfs:subClassOf rdf:resource="#Bezüge"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Vertrauensschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Schaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="befristeter_Arbeitsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Auslobung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Verdingungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="reiner_Vermögensschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Vermögensschaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Sonderzahlung">
+    <owl:equivalentClass rdf:resource="#Sonderzuwendung"/>
+    <owl:equivalentClass rdf:resource="#Einmalzahlungen"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Schadensersatzanspruch">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+    <rdfs:subClassOf rdf:resource="#rechtlicher_Anspruch"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Weiterbildung">
+    <owl:equivalentClass rdf:resource="#Fortbildung"/>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#berufliche_Entwicklung"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Leihvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Gebrauchsüberlassungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#jährliches_Einkommen">
+    <rdfs:subClassOf rdf:resource="#regelmäßiges_Einkommen"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Gesellschaftsvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Schadensersatz">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+    <owl:equivalentClass rdf:resource="#Schadenersatzleistung"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Weihnachtsgeld">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Weihnachtsgeldzahlung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#jährliche_Sonderzahlung"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Eingriffshaftung">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrecht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Bruttobezüge">
+    <rdfs:subClassOf rdf:resource="#Bezüge"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Treuhandvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Urlaubsgeld">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Urlaubsgeldzahlung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#jährliche_Sonderzahlung"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Körperverletzung">
+    <rdfs:subClassOf rdf:resource="#Personenschaden"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Vermögensschaden">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Schaden"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Endgrundgehalt">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Einkommen"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass rdf:resource="#Lohn"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Weihnachtsgeldzahlung">
+    <rdfs:subClassOf rdf:resource="#jährliche_Sonderzahlung"/>
+    <owl:equivalentClass rdf:resource="#Weihnachtsgeld"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Gesundheitsbeschädigung">
+    <rdfs:subClassOf rdf:resource="#Personenschaden"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Darlehensvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Gebrauchsüberlassungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Erbvertrag">
+    <rdfs:subClassOf rdf:resource="#vertragliches_Güterrecht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Gefährdungshaftung">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrecht"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Vergütung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsrechtsvokabular"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass rdf:resource="#Entgelt"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Scheidungsvereinbarung">
+    <rdfs:subClassOf rdf:resource="#vertragliches_Güterrecht"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Ehevertrag"/>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#berufliche_Entwicklung">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsrechtsvokabular"/>
+    </rdfs:subClassOf>
+    <owl:equivalentClass rdf:resource="#Aus-_und_Weiterbildung"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Vermögensminderung">
+    <rdfs:subClassOf rdf:resource="#Vermögensschaden"/>
+    <related rdf:resource="#Schadenersatzrecht"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Nettolohn">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass rdf:resource="#Nettogehalt"/>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Schaden">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Netzentgelt">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Nutzungsentgelt"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Schenkungsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Verpflichtungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Maklervertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Verdingungsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="Beratungsvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Anstellungsvertrag">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Arbeitsvertrag"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#Dienstvertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Verschuldenshaftung">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrecht"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Beratungsfehler">
+    <rdfs:subClassOf rdf:resource="#Schadenersatzrechtsvokabular"/>
+    <owl:equivalentClass rdf:resource="#fehlerhafte_Beratung"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Nettobezüge">
+    <rdfs:subClassOf rdf:resource="#Bezüge"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Bruttolohn">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Bruttogehalt"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+    <invisible rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</invisible>
+  </owl:Class>
+  <owl:Class rdf:ID="Lebenspartnerschaftsvertrag">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Ehevertrag"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#vertragliches_Güterrecht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="monatliche_Sonderzahlung">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="monatliche_Sonderzuwendung"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#monatliches_Einkommen"/>
+    <rdfs:subClassOf rdf:resource="#Sonderzahlung"/>
+  </owl:Class>
+  <owl:Class rdf:about="#immaterieller_Schadensersatzanspruch">
+    <rdfs:subClassOf rdf:resource="#Schadensersatzanspruch"/>
+    <related rdf:resource="#Schadenersatzrecht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Immaterieller_Schaden">
+    <rdfs:subClassOf rdf:resource="#Schaden"/>
+    <related rdf:resource="#immaterieller_Schadensersatzanspruch"/>
+  </owl:Class>
+  <owl:Class rdf:ID="monatliches_Arbeitsentgelt">
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="Monatslohn"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Class rdf:ID="monatliches_Endgrundgehalt"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#monatliches_Einkommen"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitsentgelt">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Arbeitslohn"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#Verdienst"/>
+  </owl:Class>
+  <owl:Class rdf:ID="unbefristeter_Arbeitsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Arbeitsvertrag"/>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Gebrauchsüberlassungsvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Bruttogehalt">
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass rdf:resource="#Bruttolohn"/>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Verdingungsvertrag">
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Arbeitsrecht"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:about="#laufend_und_einmalig_gezahltes_Arbeitsentgelt">
+    <rdfs:subClassOf rdf:resource="#Verdienst"/>
+    <owl:equivalentClass rdf:resource="#Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#monatliches_Endgrundgehalt">
+    <owl:equivalentClass rdf:resource="#monatliches_Arbeitsentgelt"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatslohn"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitsrecht">
+    <rdfs:subClassOf rdf:resource="#Recht"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Jahresarbeitsentgelt">
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+    <rdfs:subClassOf rdf:resource="#jährliches_Einkommen"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitsvertrag">
+    <rdfs:subClassOf rdf:resource="#Dienstvertrag"/>
+  </owl:Class>
+  <owl:Class rdf:ID="einmalig_gezahltes_Arbeitsentgelt">
+    <rdfs:subClassOf rdf:resource="#Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Verpflichtungsvertrag">
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Urlaubsgeldzahlung">
+    <owl:equivalentClass rdf:resource="#Urlaubsgeld"/>
+    <rdfs:subClassOf rdf:resource="#jährliche_Sonderzahlung"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Einkommen">
+    <rdfs:subClassOf rdf:resource="#Entgelt"/>
+    <owl:equivalentClass rdf:resource="#Einkünfte"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitslohn">
+    <rdfs:subClassOf rdf:resource="#Verdienst"/>
+    <owl:equivalentClass rdf:resource="#Arbeitsentgelt"/>
+    <owl:equivalentClass rdf:resource="#laufend_und_einmalig_gezahltes_Arbeitsentgelt"/>
+    <owl:equivalentClass rdf:resource="#Arbeitseinkommen"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitsrechtsvokabular">
+    <invisible rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean"
+    >true</invisible>
+    <rdfs:subClassOf rdf:resource="#Arbeitsrecht"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Nutzungsentgelt">
+    <rdfs:subClassOf rdf:resource="#Entgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Ehevertrag">
+    <rdfs:subClassOf rdf:resource="#vertragliches_Güterrecht"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Arbeitsplatz">
+    <owl:equivalentClass rdf:resource="#Arbeitsstelle"/>
+    <rdfs:subClassOf rdf:resource="#Arbeitsrechtsvokabular"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Schadenersatzklage">
+    <rdfs:subClassOf rdf:resource="#Klage"/>
+    <related rdf:resource="#Schadenersatzrecht"/>
+    <related rdf:resource="#Schadensersatz"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Monatslohn">
+    <owl:equivalentClass rdf:resource="#monatliches_Endgrundgehalt"/>
+    <owl:equivalentClass rdf:resource="#monatliches_Arbeitsentgelt"/>
+    <owl:equivalentClass>
+      <owl:Class rdf:about="#Monatsgehalt"/>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Kaufvertrag">
+    <rdfs:subClassOf rdf:resource="#Verpflichtungsvertrag"/>
+    <rdfs:subClassOf rdf:resource="#Vertrag"/>
+  </owl:Class>
+  <owl:Class rdf:about="#Monatsgehalt">
+    <owl:equivalentClass rdf:resource="#Bruttogehalt"/>
+    <owl:equivalentClass rdf:resource="#Nettogehalt"/>
+    <owl:equivalentClass rdf:resource="#Nettolohn"/>
+    <owl:equivalentClass rdf:resource="#Bruttolohn"/>
+    <owl:equivalentClass rdf:resource="#Monatslohn"/>
+    <owl:equivalentClass rdf:resource="#monatliches_Endgrundgehalt"/>
+    <rdfs:subClassOf rdf:resource="#laufend_gezahltes_Arbeitsentgelt"/>
+    <owl:equivalentClass rdf:resource="#monatliches_Arbeitsentgelt"/>
+  </owl:Class>
+  <owl:Class rdf:about="#monatliche_Sonderzuwendung">
+    <owl:equivalentClass rdf:resource="#monatliche_Sonderzahlung"/>
+    <rdfs:subClassOf rdf:resource="#Sonderzahlung"/>
+  </owl:Class>
+  <owl:Class rdf:about="#jährliche_Sonderzuwendung">
+    <owl:equivalentClass rdf:resource="#jährliche_Sonderzahlung"/>
+    <rdfs:subClassOf rdf:resource="#Sonderzahlung"/>
+  </owl:Class>
+  <owl:ObjectProperty rdf:ID="related">
+    <rdfs:comment>The linked classes are related, e.g., if a user is interested in one concept he may also want to find the related one.</rdfs:comment>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:ID="invisible">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  </owl:DatatypeProperty>
+</rdf:RDF>
+
+<!-- Created with TopBraid Composer -->

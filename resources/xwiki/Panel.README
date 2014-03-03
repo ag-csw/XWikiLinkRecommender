@@ -1,0 +1,49 @@
+Installation Notes
+==================
+
+The "CSW Link Panel" is a ready-to-run extension to the XWiki system. For installing and activating it, proceed as described below.
+
+
+PREREQUISITES:
+--------------
+
+- You need to be able to log in to your XWiki as an administrator.
+- You need to be able to modify files inside your XWiki installation directory on the server (the ability to log in as a user with write privileges in the XWiki installation folder).
+
+
+Installation:
+------------- 
+
+1. Import the panel into your XWiki database:
+
+	a. Login to your XWiki as an administrator.
+	b. Navigate to "Administration" -> "Import".
+	
+	c. In the section "Add an attachment" at the lower end of the import page, choose as "File to upload" the file Panels.CSW+Link+Panel.xar
+	d. Click "Attach this file".
+	e. The uploaded file should now be available in the section "Available files to import" at the upper end of the import page. Click on it.
+	f. A new section "Available documents to import" should become visible. Leave the checkboxes as they are and click "Import".
+	
+	g. repeat the steps c. through f. with the file Panels.CSW+Link+Javascript.xar
+	
+
+2. Activate the panel:
+
+	a. Locate your XWiki installation directory (which we will call <xwiki install dir> now).
+	
+	b. Navigate to the directory <xwiki install dir>/webapps/xwiki/templates.
+	c. Open the file editpanelsvars.vm in a text editor.
+	d. Replace the line:
+		#set($editorPanelsWiki = "Panels.EditModes,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+	   with:
+	   	#set($editorPanelsWiki = "Panels.EditModes,Panels.CSW Link Panel,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+	e. Save the file and quit the text editor.
+	
+	f. Navigate to the directory <xwiki install dir>/webapps/xwiki/skins/toucan.
+	g. Open the file editpanelsvars.vm in a text editor.
+	h. Replace the line:
+		#set($editorPanelsWiki = "Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+	   with:
+	   	#set($editorPanelsWiki = "Panels.CSW Link Panel,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+	i. Save the file and quit the text editor.
+	   	

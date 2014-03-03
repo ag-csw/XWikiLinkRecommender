@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns="http://www.ag-csw.de/ontologies/index-002#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xml:base="http://www.ag-csw.de/ontologies/index-002">
+  <owl:Ontology rdf:about="">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Test, if multiple URIs can be assigned to a key.</rdfs:comment>
+  </owl:Ontology>
+  <owl:Class rdf:ID="Lebensmittel"/>
+  <owl:Class rdf:ID="Gewürze">
+    <rdfs:subClassOf rdf:resource="#Lebensmittel"/>
+  </owl:Class>
+  <owl:Class rdf:ID="Gewürz">
+    <rdfs:subClassOf rdf:resource="#Lebensmittel"/>
+  </owl:Class>
+</rdf:RDF>
