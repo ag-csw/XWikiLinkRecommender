@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,12 +35,22 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.search.Hits;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.LogDocMergePolicy;
+import org.apache.lucene.index.LogMergePolicy;
+import org.apache.lucene.index.MergePolicy;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
+import org.apache.lucene.util.Version;
 
 import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
@@ -48,6 +59,7 @@ import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.notify.XWikiActionNotificationInterface;
 import com.xpn.xwiki.notify.XWikiDocChangeNotificationInterface;
 import com.xpn.xwiki.notify.XWikiNotificationRule;
+
 import de.csw.linkgenerator.plugin.lucene.AbstractXWikiRunnable;
 import de.csw.linkgenerator.plugin.lucene.AttachmentData;
 import de.csw.linkgenerator.plugin.lucene.DocumentData;
@@ -73,7 +85,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
 
     private IndexWriter writer;
 
-    private String indexDir;
+    private Directory indexDir;
 
     private XWikiDocumentQueue queue = new XWikiDocumentQueue();
 
@@ -91,7 +103,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
 
     private IndexSearcher searcher;
 
-    private IndexReader reader;
+    private DirectoryReader reader;
 
     private XWikiContext context;
 
@@ -214,7 +226,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
 
                     XWikiContext context = (XWikiContext) this.context.clone();
                     context.getWiki().getStore().cleanUp(context);
-                    openWriter(false);
+                    openWriter(OpenMode.APPEND);
 
                     int nb = 0;
                     for (Map.Entry<String, IndexData> entry : toIndex.entrySet()) {
@@ -226,7 +238,8 @@ public class IndexUpdater extends AbstractXWikiRunnable
                                 this.xwiki.getDocument(data.getFullName(), context);
 
                             if (data.getLanguage() != null && !data.getLanguage().equals("")) {
-                                doc = doc.getTranslatedDocument(data.getLanguage(), context);
+//                                doc = doc.getTranslatedDocument(data.getLanguage(), context);
+                                doc.getTranslatedDocument(new Locale(data.getLanguage()), context);
                             }
 
                             addToIndex(data, doc, context);
@@ -241,7 +254,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
                         LOG.info("indexed " + nb + " docs to lucene index");
                     }
 
-                    writer.flush();
+                    writer.commit();
                 } catch (Exception e) {
                     LOG.error("error indexing documents", e);
                 } finally {
@@ -263,9 +276,9 @@ public class IndexUpdater extends AbstractXWikiRunnable
     private synchronized void closeSearcher()
     {
         try {
-            if (this.searcher != null) {
-                this.searcher.close();
-            }
+//            if (this.searcher != null) {
+//                this.searcher.close();
+//            }
             if (this.reader != null) {
                 this.reader.close();
             }
@@ -284,7 +297,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
     private synchronized void openSearcher()
     {
         try {
-            this.reader = IndexReader.open(this.indexDir);
+            this.reader = DirectoryReader.open(this.indexDir);
             this.searcher = new IndexSearcher(this.reader);
         } catch (IOException e) {
             LOG.error("error opening index searcher", e);
@@ -304,7 +317,8 @@ public class IndexUpdater extends AbstractXWikiRunnable
             }
 
             try {
-                this.reader.deleteDocument(id);
+//                this.reader.deleteDocument(id);
+                this.writer.tryDeleteDocument(reader, id);
                 nb++;
             } catch (IOException e1) {
                 LOG.error("error deleting doc " + id, e1);
@@ -319,9 +333,10 @@ public class IndexUpdater extends AbstractXWikiRunnable
         List<Integer> retval = new ArrayList<Integer>(3);
         Query query = data.buildQuery();
         try {
-            Hits hits = this.searcher.search(query);
-            for (int i = 0; i < hits.length(); i++) {
-                retval.add(new Integer(hits.id(i)));
+            TopDocs hits = this.searcher.search(query, Integer.MAX_VALUE);
+            for (int i = 0; i < hits.totalHits; i++) {
+//                retval.add(new Integer(hits.id(i)));
+                retval.add(new Integer(hits.scoreDocs[i].doc));
             }
         } catch (Exception e) {
             LOG.error(String.format(
@@ -332,7 +347,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
         return retval;
     }
 
-    private void openWriter(boolean create)
+    private void openWriter(OpenMode openMode)
     {
         if (writer != null) {
             LOG.error("Writer already open and createWriter called");
@@ -341,10 +356,17 @@ public class IndexUpdater extends AbstractXWikiRunnable
 
         try {
             // fix for windows by Daniel Cortes:
-            FSDirectory f = FSDirectory.getDirectory(indexDir);
-            writer = new IndexWriter(f, analyzer, create);
+//            FSDirectory f = FSDirectory.getDirectory(indexDir);
+        	IndexWriterConfig conf = new IndexWriterConfig(Version.LUCENE_40, analyzer);
+        	conf.setOpenMode(openMode);
+        	
+        	// Ralph: This is kind of guesswork
+        	LogDocMergePolicy mergePolicy = new LogDocMergePolicy();
+        	mergePolicy.setUseCompoundFile(true);
+        	conf.setMergePolicy(mergePolicy);
             // writer = new IndexWriter (indexDir, analyzer, create);
-            writer.setUseCompoundFile(true);
+            writer = new IndexWriter(indexDir, conf);
+//            writer.setUseCompoundFile(true);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("successfully opened index writer : " + indexDir);
@@ -361,11 +383,12 @@ public class IndexUpdater extends AbstractXWikiRunnable
             return;
         }
 
-        try {
-            this.writer.optimize();
-        } catch (IOException e1) {
-            LOG.error("Exception caught when optimizing Index", e1);
-        }
+        // Ralph: see http://blog.trifork.com/2011/11/21/simon-says-optimize-is-bad-for-you/
+//        try {
+//            this.writer.optimize();
+//        } catch (IOException e1) {
+//            LOG.error("Exception caught when optimizing Index", e1);
+//        }
 
         try {
             this.writer.close();
@@ -389,10 +412,10 @@ public class IndexUpdater extends AbstractXWikiRunnable
 
         org.apache.lucene.document.Document luceneDoc = new org.apache.lucene.document.Document();
         data.addDataToLuceneDocument(luceneDoc, doc, context);
-        Field fld = null;
+        IndexableField fld = null;
 
         // collecting all the fields for using up in search
-        for (Iterator<Field> it = luceneDoc.getFields().iterator(); it.hasNext();) {
+        for (Iterator<IndexableField> it = luceneDoc.getFields().iterator(); it.hasNext();) {
             fld = it.next();
             if (!fields.contains(fld.name())) {
                 fields.add(fld.name());
@@ -405,7 +428,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
     /**
      * @param indexDir The indexDir to set.
      */
-    public void setIndexDir(String indexDir)
+    public void setIndexDir(Directory indexDir)
     {
         this.indexDir = indexDir;
     }
@@ -418,7 +441,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
         this.analyzer = analyzer;
     }
 
-    public synchronized void init(Properties config, LucenePlugin plugin, XWikiContext context)
+    public synchronized void init(Properties config, LucenePlugin plugin, XWikiContext context) throws IOException
     {
         this.xwiki = context.getWiki();
         this.context = (XWikiContext) context.clone();
@@ -428,15 +451,21 @@ public class IndexUpdater extends AbstractXWikiRunnable
         // String[] indexDirs =
         // StringUtils.split(config.getProperty(LucenePlugin.PROP_INDEX_DIR), "
         // ,");
-        String[] indexDirs = StringUtils.split(plugin.getIndexDirs(), ",");
-        if (indexDirs != null && indexDirs.length > 0) {
-            this.indexDir = indexDirs[0];
-            File f = new File(indexDir);
+        String[] dirPaths = StringUtils.split(plugin.getIndexDirs(), ",");
+
+        if (dirPaths != null && dirPaths.length > 0) {
+        	try {
+        		this.indexDir = new NIOFSDirectory(new File(dirPaths[0]));
+        	} catch (IOException e) {
+        		IOException up = new IOException("Cannot create index in " + dirPaths[0], e);
+        		throw up; // he he
+        	}
+            File f = new File(dirPaths[0]);
             if (!f.isDirectory()) {
                 f.mkdirs();
                 this.needInitialBuild = true;
             }
-            if (!IndexReader.indexExists(f)) {
+            if (!DirectoryReader.indexExists(indexDir)) {
                 this.needInitialBuild = true;
             }
         }
@@ -471,7 +500,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
         }
 
         synchronized (this) {
-            openWriter(true);
+            openWriter(OpenMode.CREATE);
             closeWriter();
         }
     }
@@ -587,7 +616,7 @@ public class IndexUpdater extends AbstractXWikiRunnable
     public long getLuceneDocCount()
     {
         if (writer != null)
-            return writer.docCount();
+            return writer.numDocs();
 
         return -1;
     }

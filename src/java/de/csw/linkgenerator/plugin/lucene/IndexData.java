@@ -25,6 +25,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -99,65 +101,55 @@ public abstract class IndexData
     {
         // Keyword fields: stored and indexed, but not tokenized
         // Note: ID field must be UN_TOKENIZED to enable case sensitive IDs
-        luceneDoc.add(new Field(IndexFields.DOCUMENT_ID,
-            getId(),
-            Field.Store.YES,
-            Field.Index.UN_TOKENIZED));
-        luceneDoc.add(new Field(IndexFields.DOCUMENT_LANGUAGE,
+        luceneDoc.add(new StringField(IndexFields.DOCUMENT_ID,
+                getId(),
+                Field.Store.YES));
+        luceneDoc.add(new TextField(IndexFields.DOCUMENT_LANGUAGE,
             this.language,
-            Field.Store.YES,
-            Field.Index.TOKENIZED));
+            Field.Store.YES));
         if (wiki != null && wiki.length() > 0) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_WIKI,
+            luceneDoc.add(new TextField(IndexFields.DOCUMENT_WIKI,
                 wiki,
-                Field.Store.YES,
-                Field.Index.TOKENIZED));
+                Field.Store.YES));
         }
         if (getType() != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_TYPE,
+            luceneDoc.add(new TextField(IndexFields.DOCUMENT_TYPE,
                 getType(),
-                Field.Store.YES,
-                Field.Index.TOKENIZED));
+                Field.Store.YES));
         }
         if (modificationDate != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_DATE, IndexFields
-                .dateToString(modificationDate), Field.Store.YES, Field.Index.UN_TOKENIZED));
+            luceneDoc.add(new StringField(IndexFields.DOCUMENT_DATE, IndexFields
+                .dateToString(modificationDate), Field.Store.YES));
         }
         if (creationDate != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_CREATIONDATE, IndexFields
-                .dateToString(creationDate), Field.Store.YES, Field.Index.UN_TOKENIZED));
+            luceneDoc.add(new StringField(IndexFields.DOCUMENT_CREATIONDATE, IndexFields
+                .dateToString(creationDate), Field.Store.YES));
         }
 
         // stored Text fields: tokenized and indexed
         if (documentTitle != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_TITLE,
+            luceneDoc.add(new TextField(IndexFields.DOCUMENT_TITLE,
                 documentTitle,
-                Field.Store.YES,
-                Field.Index.TOKENIZED));
+                Field.Store.YES));
         }
-        luceneDoc.add(new Field(IndexFields.DOCUMENT_NAME,
+        luceneDoc.add(new TextField(IndexFields.DOCUMENT_NAME,
             documentName,
-            Field.Store.YES,
-            Field.Index.TOKENIZED));
-        luceneDoc.add(new Field(IndexFields.DOCUMENT_WEB,
+            Field.Store.YES));
+        luceneDoc.add(new TextField(IndexFields.DOCUMENT_WEB,
             documentWeb,
-            Field.Store.YES,
-            Field.Index.TOKENIZED));
-        luceneDoc.add(new Field(IndexFields.DOCUMENT_FULLNAME,
+            Field.Store.YES));
+        luceneDoc.add(new TextField(IndexFields.DOCUMENT_FULLNAME,
             documentFullName,
-            Field.Store.YES,
-            Field.Index.TOKENIZED));
+            Field.Store.YES));
         if (author != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_AUTHOR,
+            luceneDoc.add(new TextField(IndexFields.DOCUMENT_AUTHOR,
                 author,
-                Field.Store.YES,
-                Field.Index.TOKENIZED));
+                Field.Store.YES));
         }
         if (creator != null) {
-            luceneDoc.add(new Field(IndexFields.DOCUMENT_CREATOR,
+            luceneDoc.add(new TextField(IndexFields.DOCUMENT_CREATOR,
                 creator,
-                Field.Store.YES,
-                Field.Index.TOKENIZED));
+                Field.Store.YES));
         }
 
         // UnStored fields: tokenized and indexed, but no reconstruction of
@@ -177,10 +169,9 @@ public abstract class IndexData
         try {
             final String ft = getRelevantData(doc, context);
             if (ft != null) {
-                luceneDoc.add(new Field(IndexFields.FULLTEXT,
+                luceneDoc.add(new TextField(IndexFields.FULLTEXT,
                     ft,
-                    Field.Store.NO,
-                    Field.Index.TOKENIZED));
+                    Field.Store.NO));
             }
         } catch (Exception e) {
             LOG.error("error extracting relevant data for document " + this, e);

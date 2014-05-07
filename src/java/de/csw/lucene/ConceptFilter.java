@@ -75,7 +75,7 @@ public final class ConceptFilter extends TokenFilter {
 	Queue<Token> queue = new LinkedList<Token>();
 
 	/**
-	 * Build an ConceptFilter that uses a given ontology index
+	 * Build a ConceptFilter that uses a given ontology index
 	 * 
 	 * @param in
 	 *            a token stream
@@ -90,48 +90,53 @@ public final class ConceptFilter extends TokenFilter {
 	/**
 	 * @return Returns the next token in the stream, or null at EOS
 	 */
-	public final Token next(final Token reusableToken) throws IOException {
-		assert reusableToken != null;
-		
-		Token nextToken = queue.isEmpty() ? input.next(reusableToken) : queue.poll(); 
-		
-		if (nextToken == null)
-			return null;
+	@Override
+	public boolean incrementToken() throws IOException {
+
+		if (!input.incrementToken())
+			return false;
+
+		Token reusableToken = input.addAttribute(Token.class);
+
+		Token nextToken = queue.isEmpty() ? reusableToken : queue.poll();
 		
 		// check if we got a prefix of a concept (searching the longest match)
 		Token tmpToken;
 		List<String> terms = new ArrayList<String>();
-		terms.add(String.copyValueOf(nextToken.termBuffer(), 0, nextToken.termLength()));
-		int bufferSize = nextToken.termLength();
+		terms.add(String.copyValueOf(nextToken.buffer(), 0, nextToken.length()));
+		int bufferSize = nextToken.length();
 
 		while (index.isPrefix(terms)) {
-			tmpToken = input.next();
+			input.incrementToken();
+			tmpToken = input.addAttribute(Token.class);
 			// TODO maybe we spoil buffer space using termLength(); is endOffset the right one?
-			bufferSize += tmpToken.termLength() + 1;
+			bufferSize += tmpToken.length() + 1;
 			queue.add(tmpToken);
-			terms.add(String.copyValueOf(tmpToken.termBuffer(), 0, tmpToken.termLength()));
+			terms.add(String.copyValueOf(tmpToken.buffer(), 0, tmpToken.length()));
 		}
 		
 		if (index.hasExactMatches(StringUtils.join(terms.toArray(), ' '))) {
 			if (!queue.isEmpty()) {
 				// we have to adjust the token to represent the complete concept
-				nextToken.resizeTermBuffer(bufferSize);
-				int destPos = nextToken.termLength();
+				nextToken.resizeBuffer(bufferSize);
+				int destPos = nextToken.length();
 				// TODO the first one could be ignored since it is nextToken instance
 				for (Token t : queue) {
-					nextToken.termBuffer()[destPos] = OntologyIndex.PREFIX_SEPARATOR;
-					nextToken.setEndOffset(t.endOffset());
-					System.arraycopy(t.termBuffer(), 0, nextToken.termBuffer(), destPos + 1, t.termLength());
-					destPos += t.termLength() + 1;
+					nextToken.buffer()[destPos] = OntologyIndex.PREFIX_SEPARATOR;
+					nextToken.setOffset(nextToken.startOffset(), t.endOffset());
+					System.arraycopy(t.buffer(), 0, nextToken.buffer(), destPos + 1, t.length());
+					destPos += t.length() + 1;
 				}
-				nextToken.setTermLength(bufferSize);
+				nextToken.setLength(bufferSize);
 				queue.clear();
 			}
 			
 			nextToken.setType(CONCEPT_TYPE);
-			log.trace("Concept token recognized: " + String.copyValueOf(nextToken.termBuffer(), 0, nextToken.termLength()));
+			log.trace("Concept token recognized: " + String.copyValueOf(nextToken.buffer(), 0, nextToken.length()));
 		}
 		
-		return nextToken;
+		return true;
 	}
+
+
 }

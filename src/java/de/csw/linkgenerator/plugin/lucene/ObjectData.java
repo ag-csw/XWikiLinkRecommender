@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
@@ -36,6 +37,7 @@ import com.xpn.xwiki.objects.classes.BaseClass;
 import com.xpn.xwiki.objects.classes.ListItem;
 import com.xpn.xwiki.objects.classes.PasswordClass;
 import com.xpn.xwiki.objects.classes.StaticListClass;
+
 import de.csw.linkgenerator.plugin.lucene.IndexData;
 import de.csw.linkgenerator.plugin.lucene.IndexFields;
 import de.csw.linkgenerator.plugin.lucene.LucenePlugin;
@@ -138,8 +140,8 @@ public class ObjectData extends IndexData
         for (String className : doc.getxWikiObjects().keySet()) {
             for (BaseObject obj : doc.getObjects(className)) {
                 if (obj != null) {
-                    luceneDoc.add(new Field(IndexFields.OBJECT, obj.getClassName(), Field.Store.YES,
-                        Field.Index.TOKENIZED));
+                    luceneDoc.add(new TextField(IndexFields.OBJECT, obj.getClassName(), Field.Store.YES));
+                    
                     Object[] propertyNames = obj.getPropertyNames();
                     for (int i = 0; i < propertyNames.length; i++) {
                         try {
@@ -167,7 +169,7 @@ public class ObjectData extends IndexData
         } else {
             final String ft = getContentAsText(baseObject, propertyName, context);
             if (ft != null) {
-                luceneDoc.add(new Field(fieldFullName, ft, Field.Store.YES, Field.Index.TOKENIZED));
+                luceneDoc.add(new TextField(fieldFullName, ft, Field.Store.YES));
             }
         }
     }
@@ -185,16 +187,16 @@ public class ObjectData extends IndexData
             if (item != null) {
                 // we index the key of the list
                 String fieldName = fieldFullName + ".key";
-                luceneDoc.add(new Field(fieldName, item.getId(), Field.Store.YES, Field.Index.TOKENIZED));
+                luceneDoc.add(new TextField(fieldName, item.getId(), Field.Store.YES));
                 // we index the value
                 fieldName = fieldFullName + ".value";
-                luceneDoc.add(new Field(fieldName, item.getValue(), Field.Store.YES, Field.Index.TOKENIZED));
+                luceneDoc.add(new TextField(fieldName, item.getValue(), Field.Store.YES));
                 if (!item.getId().equals(item.getValue())) {
-                    luceneDoc.add(new Field(fieldFullName, item.getValue(), Field.Store.YES, Field.Index.TOKENIZED));
+                    luceneDoc.add(new TextField(fieldFullName, item.getValue(), Field.Store.YES));
                 }
             }
             // we index both if value is not equal to the id(key)
-            luceneDoc.add(new Field(fieldFullName, value, Field.Store.YES, Field.Index.TOKENIZED));
+            luceneDoc.add(new TextField(fieldFullName, value, Field.Store.YES));
         }
     }
 

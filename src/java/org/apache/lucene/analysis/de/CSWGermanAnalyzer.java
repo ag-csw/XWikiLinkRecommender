@@ -44,6 +44,7 @@ package org.apache.lucene.analysis.de;
  */
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashSet;
@@ -51,15 +52,18 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LowerCaseFilter;
-import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.WordlistLoader;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.analysis.util.WordlistLoader;
+import org.apache.lucene.util.Version;
 
-import de.csw.ontology.OntologyIndex;
 import de.csw.lucene.ConceptFilter;
+import de.csw.ontology.OntologyIndex;
 
 /**
  * Analyzer for German language. Supports an external list of stopwords (words that
@@ -71,7 +75,7 @@ import de.csw.lucene.ConceptFilter;
  * 
  * @version $Id$
  */
-public class GermanAnalyzer extends Analyzer {
+public class CSWGermanAnalyzer extends Analyzer {
   
   /**
    * List of typical german stopwords.
@@ -104,36 +108,36 @@ public class GermanAnalyzer extends Analyzer {
    * Builds an analyzer with the default stop words
    * (<code>GERMAN_STOP_WORDS</code>).
    */
-  public GermanAnalyzer() {
-    stopSet = StopFilter.makeStopSet(GERMAN_STOP_WORDS);
+  public CSWGermanAnalyzer() {
+    stopSet = StopFilter.makeStopSet(Version.LUCENE_40, GERMAN_STOP_WORDS);
   }
 
   /**
    * Builds an analyzer with the given stop words.
    */
-  public GermanAnalyzer(String[] stopwords) {
-    stopSet = StopFilter.makeStopSet(stopwords);
+  public CSWGermanAnalyzer(String[] stopwords) {
+    stopSet = StopFilter.makeStopSet(Version.LUCENE_40, stopwords);
   }
 
   /**
    * Builds an analyzer with the given stop words.
    */
-  public GermanAnalyzer(Map stopwords) {
+  public CSWGermanAnalyzer(Map stopwords) {
     stopSet = new HashSet(stopwords.keySet());
   }
 
   /**
    * Builds an analyzer with the given stop words.
    */
-  public GermanAnalyzer(File stopwords) throws IOException {
-    stopSet = WordlistLoader.getWordSet(stopwords);
+  public CSWGermanAnalyzer(File stopwords) throws IOException {
+    stopSet = WordlistLoader.getWordSet(new FileReader(stopwords), Version.LUCENE_40);
   }
 
   /**
    * Builds an exclusionlist from an array of Strings.
    */
   public void setStemExclusionTable(String[] exclusionlist) {
-    exclusionSet = StopFilter.makeStopSet(exclusionlist);
+    exclusionSet = StopFilter.makeStopSet(Version.LUCENE_40, exclusionlist);
   }
 
   /**
@@ -147,22 +151,23 @@ public class GermanAnalyzer extends Analyzer {
    * Builds an exclusionlist from the words contained in the given file.
    */
   public void setStemExclusionTable(File exclusionlist) throws IOException {
-    exclusionSet = WordlistLoader.getWordSet(exclusionlist);
+    exclusionSet = WordlistLoader.getWordSet(new FileReader(exclusionlist), Version.LUCENE_40);
   }
 
-  /**
-   * Creates a TokenStream which tokenizes all the text in the provided Reader.
-   *
-   * @return A TokenStream build from a StandardTokenizer filtered with
-   *         StandardFilter, LowerCaseFilter, StopFilter, GermanStemFilter
-   */
-  public TokenStream tokenStream(String fieldName, Reader reader) {
-    TokenStream result = new StandardTokenizer(reader);
-    result = new StandardFilter(result);
-    result = new LowerCaseFilter(result);
-    result = new StopFilter(result, stopSet);
-    result = new GermanStemFilter(result, exclusionSet);
-    result = new ConceptFilter(result, OntologyIndex.get());
-    return result;
-  }
+	@Override
+	protected TokenStreamComponents createComponents(String fieldName,
+			Reader reader)
+	{
+		Tokenizer source = new StandardTokenizer(Version.LUCENE_40, reader);
+
+		TokenStream result = new StandardFilter(Version.LUCENE_40, source);
+	    result = new LowerCaseFilter(Version.LUCENE_40, result);
+	    result = new StopFilter(Version.LUCENE_40, result, new CharArraySet(Version.LUCENE_40, stopSet, true));
+	    result = new GermanStemFilter(result/*, exclusionSet*/);
+	    result = new ConceptFilter(result, OntologyIndex.get());
+	    
+	    return new TokenStreamComponents(source, result);
+	}
+
+
 }

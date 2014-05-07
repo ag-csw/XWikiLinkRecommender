@@ -32,12 +32,8 @@ import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.de.GermanAnalyzer;
+import org.apache.lucene.analysis.de.CSWGermanAnalyzer;
 import org.jfree.util.Log;
 
 import de.csw.lucene.ConceptFilter;
@@ -77,7 +73,7 @@ public class XWikiTextEnhancer implements TextEnhancer {
 	 * system. The search terms are related to the annotated phrase.
 	 */
 	public String enhance(String text) {
-		GermanAnalyzer ga = new GermanAnalyzer();
+		CSWGermanAnalyzer ga = new CSWGermanAnalyzer();
 		TokenStream ts = null;
 		StringBuilder result = new StringBuilder();
 		
@@ -85,15 +81,20 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		
 		try {
 			Reader r = new BufferedReader(new StringReader(text));
-			ts = ga.reusableTokenStream("", r);
 			
-			Token token = ts.next();
-			int lastEndIndex = 0;
-
+			ts = ga.tokenStream("",	 r);
+			
+			
+			Token token;
 			String term;
-			while (token != null) {
+			int lastEndIndex = 0;
+			
+			while(ts.incrementToken()) {
+			
+				token = ts.addAttribute(Token.class);
+					
 				result.append(text.substring(lastEndIndex, token.startOffset()));
-				term = String.copyValueOf(token.termBuffer(), 0, token.termLength());
+				term = String.copyValueOf(token.buffer(), 0, token.length());
 				
 				if (token.type().equals(ConceptFilter.CONCEPT_TYPE) && isAnnotatable(token)) {
 					log.debug("Annotating concept: " + term);
@@ -103,13 +104,13 @@ public class XWikiTextEnhancer implements TextEnhancer {
 				}
 					
 				lastEndIndex = token.endOffset();
-				token = ts.next();
 			}
 			result.append(text.subSequence(lastEndIndex, text.length()));
 		} catch (IOException e) {
 			Log.error("Error while processing the page content", e);
 		}
 		
+		ga.close();
 		return result.toString();
 	}
 

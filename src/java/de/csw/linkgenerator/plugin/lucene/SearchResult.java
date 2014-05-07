@@ -1,40 +1,39 @@
 /*
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
+* See the NOTICE file distributed with this work for additional
+* information regarding copyright ownership.
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU Lesser General Public License as
+* published by the Free Software Foundation; either version 2.1 of
+* the License, or (at your option) any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this software; if not, write to the Free
+* Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+* 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+*/
 package de.csw.linkgenerator.plugin.lucene;
 
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xwiki.model.reference.DocumentReference;
 
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.api.Document;
-import de.csw.linkgenerator.plugin.lucene.IndexFields;
-import de.csw.linkgenerator.plugin.lucene.LucenePlugin;
-import de.csw.linkgenerator.plugin.lucene.SearchResult;
+import com.xpn.xwiki.plugin.lucene.internal.IndexFields;
 
 /**
- * Result of a search. The Plugin will return a collection of these for display on the search page.
- *
- * @version $Id: $
- */
+* Result of a search. The Plugin will return a collection of these for display on the search page.
+*
+* @version $Id$
+*/
 public class SearchResult
 {
     private String id;
@@ -69,21 +68,25 @@ public class SearchResult
 
     private String creator;
 
-    private static final Log LOG = LogFactory.getLog(SearchResult.class);
+    private boolean hidden;
+
+    private DocumentReference documentReference;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchResult.class);
 
     /**
-     * @todo add fallback for unknown index field names (read values into a map accessible from search results page)
-     *       This would be useful for integration of external indexes where the field names dont match ours.
-     * @todo TODO: to be more flexible make a factory to construct different kinds of searchresults, esp. for external
-     *       indexes and custom implementations of searchresults
-     */
+* @todo add fallback for unknown index field names (read values into a map accessible from search results page)
+* This would be useful for integration of external indexes where the field names dont match ours.
+* @todo TODO: to be more flexible make a factory to construct different kinds of searchresults, esp. for external
+* indexes and custom implementations of searchresults
+*/
     public SearchResult(org.apache.lucene.document.Document doc, float score, com.xpn.xwiki.api.XWiki xwiki)
     {
         this.score = score;
         this.id = doc.get(IndexFields.DOCUMENT_ID);
         this.title = doc.get(IndexFields.DOCUMENT_TITLE);
         this.name = doc.get(IndexFields.DOCUMENT_NAME);
-        this.space = doc.get(IndexFields.DOCUMENT_WEB);
+        this.space = doc.get(IndexFields.DOCUMENT_SPACE);
         this.wiki = doc.get(IndexFields.DOCUMENT_WIKI);
         this.fullName = doc.get(IndexFields.DOCUMENT_FULLNAME);
         this.type = doc.get(IndexFields.DOCUMENT_TYPE);
@@ -92,6 +95,8 @@ public class SearchResult
         this.language = doc.get(IndexFields.DOCUMENT_LANGUAGE);
         this.date = IndexFields.stringToDate(doc.get(IndexFields.DOCUMENT_DATE));
         this.creationDate = IndexFields.stringToDate(doc.get(IndexFields.DOCUMENT_CREATIONDATE));
+        this.hidden = IndexFields.stringToBoolean(doc.get(IndexFields.DOCUMENT_HIDDEN));
+        this.documentReference = new DocumentReference(wiki, space, name);
         if (LucenePlugin.DOCTYPE_ATTACHMENT.equals(this.type)) {
             this.filename = doc.get(IndexFields.FILENAME);
             Document document;
@@ -99,93 +104,95 @@ public class SearchResult
                 new StringBuffer(this.wiki).append(":").append(this.space).append(".").append(this.name).toString();
             try {
                 document = xwiki.getDocument(fullDocName);
-                this.url = document.getAttachmentURL(this.filename, "download");
+                if (document != null) {
+                    this.url = document.getAttachmentURL(this.filename, "download");
+                }
             } catch (XWikiException e) {
-                LOG.error("error retrieving url for attachment " + this.filename + " of document " + fullDocName);
-                e.printStackTrace();
+                LOGGER.error("error retrieving url for attachment [{}] of document [{}]", new Object[] {this.filename,
+                fullDocName, e});
             }
-        } else if (LucenePlugin.DOCTYPE_OBJECTS.equals(type)) {
-            objects = doc.getValues("object");
+        } else {
+            this.objects = doc.getValues("object");
         }
     }
 
     /**
-     * @return the document id as indexed
-     */
+* @return the document id as indexed
+*/
     public String getId()
     {
         return this.id;
     }
 
     /**
-     * @return Returns the name of the user who last modified the document.
-     */
+* @return Returns the name of the user who last modified the document.
+*/
     public String getAuthor()
     {
         return this.author;
     }
 
     /**
-     * @return Returns the date of last modification.
-     */
+* @return Returns the date of last modification.
+*/
     public Date getDate()
     {
         return this.date;
     }
 
     /**
-     * @return Returns the filename, only used for Attachments (see {@link #getType()})
-     */
+* @return Returns the filename, only used for Attachments (see {@link #getType()})
+*/
     public String getFilename()
     {
         return this.filename;
     }
 
     /**
-     * @return the title of the document.
-     */
+* @return the title of the document.
+*/
     public String getTitle()
     {
         return this.title;
     }
 
     /**
-     * @return Returns the name of the document.
-     */
+* @return Returns the name of the document.
+*/
     public String getName()
     {
         return this.name;
     }
 
     /**
-     * @return Returns the score of this search result as computed by lucene. Is a float between zero and 1.
-     */
+* @return Returns the score of this search result as computed by lucene. Is a float between zero and 1.
+*/
     public float getScore()
     {
         return this.score;
     }
 
     /**
-     * @return Returns the type of the document, atm this can be either <code>wikipage</code> or
-     *         <code>attachment</code>.
-     */
+* @return Returns the type of the document, atm this can be either <code>wikipage</code> or <code>attachment</code>
+* .
+*/
     public String getType()
     {
         return this.type;
     }
 
     /**
-     * @return Returns the url to access the document.
-     */
+* @return Returns the url to access the document.
+*/
     public String getUrl()
     {
         return this.url;
     }
 
     /**
-     * @return Returns the space the document belongs to.
-     * @deprecated Use {@link #getSpace} instead.
-     */
+* @return Returns the space the document belongs to.
+* @deprecated Use {@link #getSpace} instead.
+*/
     @Deprecated
     public String getWeb()
     {
@@ -193,33 +200,33 @@ public class SearchResult
     }
 
     /**
-     * @return Returns the space the document belongs to.
-     */
+* @return Returns the space the document belongs to.
+*/
     public String getSpace()
     {
         return this.space;
     }
 
     /**
-     * @return the language of the Document, i.e. <code>de</code> or <code>en</code>,<code>default</code> if no
-     *         language was set at indexing time.
-     */
+* @return the language of the Document, i.e. <code>de</code> or <code>en</code>,<code>default</code> if no language
+* was set at indexing time.
+*/
     public String getLanguage()
     {
         return this.language;
     }
 
     /**
-     * @return creationDate of this document
-     */
+* @return creationDate of this document
+*/
     public Date getCreationDate()
     {
         return this.creationDate;
     }
 
     /**
-     * @return Username of the creator of the document
-     */
+* @return Username of the creator of the document
+*/
     public String getCreator()
     {
         return this.creator;
@@ -240,17 +247,32 @@ public class SearchResult
         return this.fullName;
     }
 
-    public String[] getObjects() {
+    public String[] getObjects()
+    {
         return this.objects;
     }
 
     /**
-     * @return true when this result points to wiki content (attachment, wiki page or object)
-     */
+* @return true when this result points to wiki content (attachment, wiki page or object)
+*/
     public boolean isWikiContent()
     {
-        return (LucenePlugin.DOCTYPE_WIKIPAGE.equals(this.type) || LucenePlugin.DOCTYPE_ATTACHMENT.equals(this.type) || LucenePlugin.DOCTYPE_OBJECTS
-            .equals(this.type));
+        return (LucenePlugin.DOCTYPE_WIKIPAGE.equals(this.type) || LucenePlugin.DOCTYPE_ATTACHMENT.equals(this.type));
     }
 
+    /**
+* @return true if the result is marked as "hidden", false otherwise.
+*/
+    public boolean isHidden()
+    {
+        return this.hidden;
+    }
+
+    /**
+* @return the reference of the document.
+*/
+    public DocumentReference getDocumentReference()
+    {
+        return this.documentReference;
+    }
 }

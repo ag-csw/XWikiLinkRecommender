@@ -26,10 +26,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiAttachment;
 import com.xpn.xwiki.doc.XWikiDocument;
+
 import de.csw.linkgenerator.plugin.lucene.IndexData;
 import de.csw.linkgenerator.plugin.lucene.IndexFields;
 import de.csw.linkgenerator.plugin.lucene.LucenePlugin;
@@ -83,7 +85,7 @@ public class AttachmentData extends IndexData
     {
         super.addDataToLuceneDocument(luceneDoc, doc, context);
         if (filename != null) {
-            luceneDoc.add(new Field(IndexFields.FILENAME, filename, Field.Store.YES, Field.Index.TOKENIZED));
+        	luceneDoc.add(new TextField(IndexFields.FILENAME, filename, Field.Store.YES));
         }
     }
 

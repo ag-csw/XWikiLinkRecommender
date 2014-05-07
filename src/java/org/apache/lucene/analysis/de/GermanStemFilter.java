@@ -1,31 +1,6 @@
-/*******************************************************************************
- * This file is part of the Coporate Semantic Web Project.
- * 
- * This work has been partially supported by the ``InnoProfile-Corporate Semantic Web" project funded by the German Federal
- * Ministry of Education and Research (BMBF) and the BMBF Innovation Initiative for the New German Laender - Entrepreneurial Regions.
- * 
- * http://www.corporate-semantic-web.de/
- * 
- * Freie Universitaet Berlin
- * Copyright (c) 2007-2013
- * 
- * Institut fuer Informatik
- * Working Group Coporate Semantic Web
- * Koenigin-Luise-Strasse 24-26
- * 14195 Berlin
- * 
- * http://www.mi.fu-berlin.de/en/inf/groups/ag-csw/
- * 
- * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation,
- * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA or see <http://www.gnu.org/licenses/>
- ******************************************************************************/
 package org.apache.lucene.analysis.de;
 
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -43,71 +18,73 @@ package org.apache.lucene.analysis.de;
  */
 
 import java.io.IOException;
-import java.util.Set;
 
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilter;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.KeywordAttribute;
 
 /**
- * A filter that stems German words. It supports a table of words that should
+ * A {@link TokenFilter} that stems German words. 
+ * <p>
+ * It supports a table of words that should
  * not be stemmed at all. The stemmer used can be changed at runtime after the
- * filter object is created (as long as it is a GermanStemmer).
- * 
- * 
- * @version $Id$
+ * filter object is created (as long as it is a {@link GermanStemmer}).
+ * </p>
+ * <p>
+ * To prevent terms from being stemmed use an instance of
+ * {@link KeywordMarkerFilter} or a custom {@link TokenFilter} that sets
+ * the {@link KeywordAttribute} before this {@link TokenStream}.
+ * </p>
+ * @see KeywordMarkerFilter
  */
-public final class GermanStemFilter extends TokenFilter {
-	private GermanStemmer stemmer = null;
-	private Set<String> exclusionSet = null;
+public final class GermanStemFilter extends TokenFilter
+{
+    /**
+     * The actual token in the input stream.
+     */
+    private GermanStemmer stemmer = new GermanStemmer();
 
-	public GermanStemFilter(TokenStream in) {
-		super(in);
-		stemmer = new GermanStemmer();
-	}
+    private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+    private final KeywordAttribute keywordAttr = addAttribute(KeywordAttribute.class);
 
-	/**
-	 * Builds a GermanStemFilter that uses an exclusion table.
-	 */
-	public GermanStemFilter(TokenStream in, Set<String> exclusionSet) {
-		this(in);
-		this.exclusionSet = exclusionSet;
-	}
+    /**
+     * Creates a {@link GermanStemFilter} instance
+     * @param in the source {@link TokenStream} 
+     */
+    public GermanStemFilter( TokenStream in )
+    {
+      super(in);
+    }
 
-	/**
-	 * @return Returns the next token in the stream, or null at EOS
-	 */
-	public final Token next(final Token reusableToken) throws IOException {
-		assert reusableToken != null;
-		Token nextToken = input.next(reusableToken);
+    /**
+     * @return  Returns true for next token in the stream, or false at EOS
+     */
+    @Override
+    public boolean incrementToken() throws IOException {
+      if (input.incrementToken()) {
+        String term = termAtt.toString();
 
-		if (nextToken == null)
-			return null;
+        if (!keywordAttr.isKeyword()) {
+          String s = stemmer.stem(term);
+          // If not stemmed, don't waste the time adjusting the token.
+          if ((s != null) && !s.equals(term))
+            termAtt.setEmpty().append(s);
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
 
-		String term = String.copyValueOf(nextToken.termBuffer(), 0, nextToken.termLength());
-		// Check the exclusion table.
-		if (exclusionSet == null || !exclusionSet.contains(term)) {
-			String s = stemmer.stem(term);
-			// If not stemmed, don't waste the time adjusting the token.
-			if ((s != null) && !s.equals(term))
-				nextToken.setTermText(s);
-		}
-		return nextToken;
-	}
-
-	/**
-	 * Set a alternative/custom GermanStemmer for this filter.
-	 */
-	public void setStemmer(GermanStemmer stemmer) {
-		if (stemmer != null) {
-			this.stemmer = stemmer;
-		}
-	}
-
-	/**
-	 * Set an alternative exclusion list for this filter.
-	 */
-	public void setExclusionSet(Set<String> exclusionSet) {
-		this.exclusionSet = exclusionSet;
-	}
+    /**
+     * Set a alternative/custom {@link GermanStemmer} for this filter.
+     */
+    public void setStemmer( GermanStemmer stemmer )
+    {
+      if ( stemmer != null ) {
+        this.stemmer = stemmer;
+      }
+    }
 }
