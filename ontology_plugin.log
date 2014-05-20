@@ -1,6 +1,0 @@
-29 Okt 2009 21:11:59,000 ERROR [main] (Config.java:37) - ** NOT found.
-29 Okt 2009 21:11:59,005  WARN [main] (Config.java:36) - ** NOT found.
-29 Okt 2009 21:11:59,006 DEBUG [main] (Config.java:48) - ** 3 properties loaded.
-29 Okt 2009 21:11:59,008  WARN [main] (Config.java:36) - ** NOT found.
-29 Okt 2009 21:14:29,837 DEBUG [main] (OntologyIndex.java:403) - Creating index
-29 Okt 2009 21:14:29,908 DEBUG [main] (OntologyIndex.java:423) - done

@@ -47,3 +47,4 @@ Installation:
 	   	#set($editorPanelsWiki = "Panels.CSW Link Panel,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
 	i. Save the file and quit the text editor.
 	   	
+	k. in case you use the 'colibri' skin, repeat steps f. through i. with the directory <xwiki install dir>/webapps/xwiki/skins/colibri
