@@ -50,11 +50,15 @@ import java.util.Queue;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.poi.ss.formula.ptg.AreaI.OffsetArea;
 
 import de.csw.ontology.OntologyIndex;
+import de.csw.util.Token;
 
 /**
  * A filter that detects concepts from an ontology in the token stream. A
@@ -96,47 +100,50 @@ public final class ConceptFilter extends TokenFilter {
 		if (!input.incrementToken())
 			return false;
 
-		Token reusableToken = input.addAttribute(Token.class);
+		CharTermAttribute charTermAttribute = input.addAttribute(CharTermAttribute.class);
+		OffsetAttribute offsetAttribute = input.addAttribute(OffsetAttribute.class);
+		TypeAttribute typeAttribute = input.addAttribute(TypeAttribute.class);
+		
+		Token reusableToken = new Token(charTermAttribute, offsetAttribute, typeAttribute);
 
 		Token nextToken = queue.isEmpty() ? reusableToken : queue.poll();
 		
 		// check if we got a prefix of a concept (searching the longest match)
 		Token tmpToken;
 		List<String> terms = new ArrayList<String>();
-		terms.add(String.copyValueOf(nextToken.buffer(), 0, nextToken.length()));
-		int bufferSize = nextToken.length();
+		terms.add(String.copyValueOf(nextToken.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().length()));
+		int bufferSize = nextToken.getCharTermAttribute().length();
 
 		while (index.isPrefix(terms)) {
 			input.incrementToken();
-			tmpToken = input.addAttribute(Token.class);
+			tmpToken = new Token(input.addAttribute(CharTermAttribute.class), input.addAttribute(OffsetAttribute.class), null);
 			// TODO maybe we spoil buffer space using termLength(); is endOffset the right one?
-			bufferSize += tmpToken.length() + 1;
+			bufferSize += tmpToken.getCharTermAttribute().length() + 1;
 			queue.add(tmpToken);
-			terms.add(String.copyValueOf(tmpToken.buffer(), 0, tmpToken.length()));
+			terms.add(String.copyValueOf(tmpToken.getCharTermAttribute().buffer(), 0, tmpToken.getCharTermAttribute().length()));
 		}
 		
 		if (index.hasExactMatches(StringUtils.join(terms.toArray(), ' '))) {
 			if (!queue.isEmpty()) {
 				// we have to adjust the token to represent the complete concept
-				nextToken.resizeBuffer(bufferSize);
-				int destPos = nextToken.length();
+				nextToken.getCharTermAttribute().resizeBuffer(bufferSize);
+				int destPos = nextToken.getCharTermAttribute().length();
 				// TODO the first one could be ignored since it is nextToken instance
 				for (Token t : queue) {
-					nextToken.buffer()[destPos] = OntologyIndex.PREFIX_SEPARATOR;
-					nextToken.setOffset(nextToken.startOffset(), t.endOffset());
-					System.arraycopy(t.buffer(), 0, nextToken.buffer(), destPos + 1, t.length());
-					destPos += t.length() + 1;
+					nextToken.getCharTermAttribute().buffer()[destPos] = OntologyIndex.PREFIX_SEPARATOR;
+					nextToken.getOffsetAttribute().setOffset(nextToken.getOffsetAttribute().startOffset(), t.getOffsetAttribute().endOffset());
+					System.arraycopy(t.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().buffer(), destPos + 1, t.getCharTermAttribute().length());
+					destPos += t.getCharTermAttribute().length() + 1;
 				}
-				nextToken.setLength(bufferSize);
+				nextToken.getCharTermAttribute().setLength(bufferSize);
 				queue.clear();
 			}
 			
-			nextToken.setType(CONCEPT_TYPE);
-			log.trace("Concept token recognized: " + String.copyValueOf(nextToken.buffer(), 0, nextToken.length()));
+			nextToken.getTypeAttribute().setType(CONCEPT_TYPE);
+			log.trace("Concept token recognized: " + String.copyValueOf(nextToken.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().length()));
 		}
 		
 		return true;
 	}
-
 
 }

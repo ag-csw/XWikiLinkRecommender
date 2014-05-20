@@ -27,7 +27,7 @@ package de.nbi.ontology.test;
 
 import java.io.FileNotFoundException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.testng.annotations.Test;
 

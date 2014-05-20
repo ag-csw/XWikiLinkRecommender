@@ -28,7 +28,7 @@ package de.nbi.ontology.test;
 
 import java.io.InputStream;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.log4j.Logger;
 

@@ -1,1 +1,1 @@
-﻿Hans Jörg Küster: Kleine Kulturgeschichte der <a class="similarconcept" href="http://141.20.38.74/xwiki/bin/view/Main/LuceneSearch?text=Gewürzmischung+Gewürz+pflanzliches Gewürz+mineralisches Gewürz">Gewürze</a>, C.H. Beck'sche Verlagsbuchhandlung, München 1997
+Hans Jörg Küster: Kleine Kulturgeschichte der <a class="similarconcept" href="http://141.20.38.74/xwiki/bin/view/Main/LuceneSearch?text=Gewürzmischung+Gewürz+pflanzliches Gewürz+mineralisches Gewürz">Gewürze</a>, C.H. Beck'sche Verlagsbuchhandlung, München 1997

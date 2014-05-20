@@ -1,1 +1,1 @@
-﻿<a class="similarconcept" href="http://141.20.38.74/xwiki/bin/view/Main/LuceneSearch?text=Kerbel+Küchengewürz+Glanzkerbel+Wiesenkerbel">Kerbel</a> (Anthriscus) ist eine Gattung von krautigen Pflanzen, die zur Familie der Doldenblütler (Apiaceae) gehört.
+<a class="similarconcept" href="http://141.20.38.74/xwiki/bin/view/Main/LuceneSearch?text=Kerbel+Küchengewürz+Glanzkerbel+Wiesenkerbel">Kerbel</a> (Anthriscus) ist eine Gattung von krautigen Pflanzen, die zur Familie der Doldenblütler (Apiaceae) gehört.
