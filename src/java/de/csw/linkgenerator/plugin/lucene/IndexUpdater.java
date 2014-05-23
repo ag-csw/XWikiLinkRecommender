@@ -311,6 +311,10 @@ public class IndexUpdater extends AbstractXWikiRunnable
     {
         int nb = 0;
 
+        if (writer == null) {
+        	openWriter(OpenMode.APPEND);
+        }
+        
         for (Integer id : oldDocs) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("delete doc " + id);
@@ -324,6 +328,8 @@ public class IndexUpdater extends AbstractXWikiRunnable
                 LOG.error("error deleting doc " + id, e1);
             }
         }
+        
+        closeWriter();
 
         return nb;
     }

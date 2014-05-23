@@ -49,6 +49,7 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 
@@ -378,13 +379,14 @@ public class LucenePlugin extends XWikiDefaultPlugin implements XWikiPluginInter
         // Enhance the base query with wiki names and languages.
         Query q = buildQuery(query, virtualWikiNames, languages);
         // Perform the actual search
-        TopDocs hits = (sort == null) ? searcher.search(q, Integer.MAX_VALUE) : searcher.search(q, Integer.MAX_VALUE, sort);
+        TopDocs hits = (sort == null) ? searcher.search(q, 5) : searcher.search(q, 5, sort);
         final int hitcount = hits.totalHits;
         if (LOG.isDebugEnabled()) {
             LOG.debug("query " + q + " returned " + hitcount + " hits");
         }
         // Transform the raw Lucene search results into XWiki-aware results
-        return new SearchResults(TopScoreDocCollector.create(hits.totalHits, true), searcher,
+        
+        return new SearchResults(TopScoreDocCollector.create(5, true), searcher,
             new com.xpn.xwiki.api.XWiki(context.getWiki(), context),
             context);
     }

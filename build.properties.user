@@ -2,7 +2,7 @@
 
 version = 1.0
 
-webapp.dir = /Volumes/MacBook_HD/Applications/XWiki Enterprise
+webapp.dir = /Volumes/MacBook_HD/Development/XWiki Enterprise 5.4.4
 webapp.xwiki.dir = ${webapp.dir}/webapps/xwiki
 
 build.dir = ${basedir}/build

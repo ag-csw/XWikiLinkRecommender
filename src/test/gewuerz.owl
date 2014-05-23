@@ -1,0 +1,371 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY swrl "http://www.w3.org/2003/11/swrl#" >
+    <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY gewuerz "http://www.ag-csw.de/ontologies/gewuerz#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY protege "http://protege.stanford.edu/plugins/owl/protege#" >
+    <!ENTITY xsp "http://www.owl-ontologies.com/2005/08/07/xsp.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.ag-csw.de/ontologies/gewuerz#"
+     xml:base="http://www.ag-csw.de/ontologies/gewuerz"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:protege="http://protege.stanford.edu/plugins/owl/protege#"
+     xmlns:owl2xml="http://www.w3.org/2006/12/owl2-xml#"
+     xmlns:gewuerz="http://www.ag-csw.de/ontologies/gewuerz#"
+     xmlns:xsp="http://www.owl-ontologies.com/2005/08/07/xsp.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about=""/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Blattpetersilie -->
+
+    <owl:Class rdf:about="#Blattpetersilie">
+        <rdfs:label xml:lang="de">Blattpetersilie</rdfs:label>
+        <rdfs:label xml:lang="en">leafed parsley</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Petersilie"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Dill -->
+
+    <owl:Class rdf:about="#Dill">
+        <rdfs:label xml:lang="de">Dill</rdfs:label>
+        <rdfs:label xml:lang="en">dill</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#K&#252;chengew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Fr&#252;hlingszwiebel -->
+
+    <owl:Class rdf:about="#Fr&#252;hlingszwiebel">
+        <rdfs:label xml:lang="de"
+            >Fr&#252;hlingszwiebel</rdfs:label>
+        <rdfs:label xml:lang="en">spring onion</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Lauchzwiebel"/>
+                    <rdf:Description rdf:about="#Winterzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Gew&#252;rz -->
+
+    <owl:Class rdf:about="#Gew&#252;rz">
+        <rdfs:label xml:lang="de">Gew&#252;rz</rdfs:label>
+        <rdfs:label xml:lang="en">condiment</rdfs:label>
+        <rdfs:label xml:lang="en">spice</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Gew&#252;rzmischung -->
+
+    <owl:Class rdf:about="#Gew&#252;rzmischung">
+        <rdfs:label xml:lang="de">Gew&#252;rzmischung</rdfs:label>
+        <rdfs:label xml:lang="en">mixed herbs</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Glanzkerbel -->
+
+    <owl:Class rdf:about="#Glanzkerbel">
+        <rdfs:label xml:lang="de">Glanzkerbel</rdfs:label>
+        <rdfs:label xml:lang="en"
+            >Anthriscus nitida</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Kerbel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Hauszwiebel -->
+
+    <owl:Class rdf:about="#Hauszwiebel">
+        <rdfs:label xml:lang="de">Hauszwiebel</rdfs:label>
+        <rdfs:label xml:lang="en">garden onion</rdfs:label>
+        <owl:equivalentClass rdf:resource="#K&#252;chenzwiebel"/>
+        <owl:equivalentClass rdf:resource="#Sommerzwiebel"/>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#K&#252;chenzwiebel"/>
+                    <rdf:Description rdf:about="#Sommerzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Ingwer -->
+
+    <owl:Class rdf:about="#Ingwer">
+        <rdfs:label xml:lang="de">Ingwer</rdfs:label>
+        <rdfs:label xml:lang="en">ginger</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Wurzeln_und_Knollen"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Kerbel -->
+
+    <owl:Class rdf:about="#Kerbel">
+        <rdfs:label xml:lang="de">Kerbel</rdfs:label>
+        <rdfs:label xml:lang="en">chervil</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#K&#252;chengew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Knoblauch -->
+
+    <owl:Class rdf:about="#Knoblauch">
+        <rdfs:label xml:lang="de">Knoblauch</rdfs:label>
+        <rdfs:label xml:lang="en">garlic</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Wurzeln_und_Knollen"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Kochsalz -->
+
+    <owl:Class rdf:about="#Kochsalz">
+        <rdfs:label xml:lang="de">Kochsalz</rdfs:label>
+        <rdfs:label xml:lang="en">cooking salt</rdfs:label>
+        <owl:equivalentClass rdf:resource="#Speisesalz"/>
+        <rdfs:subClassOf rdf:resource="#mineralisches_Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#K&#252;chengew&#252;rz -->
+
+    <owl:Class rdf:about="#K&#252;chengew&#252;rz">
+        <rdfs:label xml:lang="de">K&#252;chengew&#252;rz</rdfs:label>
+        <rdfs:label xml:lang="en">herbs</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#pflanzliches_Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#K&#252;chenzwiebel -->
+
+    <owl:Class rdf:about="#K&#252;chenzwiebel">
+        <rdfs:label xml:lang="de">K&#252;chenzwiebel</rdfs:label>
+        <rdfs:label xml:lang="en">bulb onion</rdfs:label>
+        <owl:equivalentClass rdf:resource="#Sommerzwiebel"/>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Hauszwiebel"/>
+                    <rdf:Description rdf:about="#Sommerzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Lauchzwiebel -->
+
+    <owl:Class rdf:about="#Lauchzwiebel">
+        <rdfs:label xml:lang="de">Lauchzwiebel</rdfs:label>
+        <rdfs:label xml:lang="en">bunching onion</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Fr&#252;hlingszwiebel"/>
+                    <rdf:Description rdf:about="#Winterzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Meerrettich -->
+
+    <owl:Class rdf:about="#Meerrettich">
+        <rdfs:label xml:lang="de">Meerrettich</rdfs:label>
+        <rdfs:label xml:lang="en">horseradish</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Wurzeln_und_Knollen"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Petersilie -->
+
+    <owl:Class rdf:about="#Petersilie">
+        <rdfs:label xml:lang="de">Petersilie</rdfs:label>
+        <rdfs:label xml:lang="en">parsley</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#K&#252;chengew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Pfeffer -->
+
+    <owl:Class rdf:about="#Pfeffer">
+        <rdfs:label xml:lang="de">Pfeffer</rdfs:label>
+        <rdfs:label xml:lang="en">pepper</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#K&#252;chengew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Sommerzwiebel -->
+
+    <owl:Class rdf:about="#Sommerzwiebel">
+        <rdfs:label xml:lang="de">Sommerzwiebel</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Hauszwiebel"/>
+                    <rdf:Description rdf:about="#K&#252;chenzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Speisesalz -->
+
+    <owl:Class rdf:about="#Speisesalz">
+        <rdfs:label xml:lang="de">Speisesalz</rdfs:label>
+        <rdfs:label xml:lang="en">kitchen salt</rdfs:label>
+        <rdfs:label xml:lang="en">table salt</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#mineralisches_Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Wiesenkerbel -->
+
+    <owl:Class rdf:about="#Wiesenkerbel">
+        <rdfs:label xml:lang="de">Wiesenkerbel</rdfs:label>
+        <rdfs:label xml:lang="en">cow parsley</rdfs:label>
+        <rdfs:label xml:lang="en">keck</rdfs:label>
+        <rdfs:label xml:lang="en"
+            >wild beaked parsley</rdfs:label>
+        <rdfs:label xml:lang="en">wild chervil</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Kerbel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Winterzwiebel -->
+
+    <owl:Class rdf:about="#Winterzwiebel">
+        <rdfs:label xml:lang="de">Winterzwiebel</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="#Fr&#252;hlingszwiebel"/>
+                    <rdf:Description rdf:about="#Lauchzwiebel"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="#Zwiebel"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Wurzeln_und_Knollen -->
+
+    <owl:Class rdf:about="#Wurzeln_und_Knollen">
+        <rdfs:label xml:lang="de"
+            >Wurzeln und Knollen</rdfs:label>
+        <rdfs:label xml:lang="en"
+            >roots and tubers</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#pflanzliches_Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Wurzelpetersilie -->
+
+    <owl:Class rdf:about="#Wurzelpetersilie">
+        <rdfs:label xml:lang="de"
+            >Wurzelpetersilie</rdfs:label>
+        <rdfs:label xml:lang="en">root parsley</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Petersilie"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#Zwiebel -->
+
+    <owl:Class rdf:about="#Zwiebel">
+        <rdfs:label xml:lang="de">Zwiebel</rdfs:label>
+        <rdfs:label xml:lang="en">onion</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Wurzeln_und_Knollen"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#mineralisches_Gew&#252;rz -->
+
+    <owl:Class rdf:about="#mineralisches_Gew&#252;rz">
+        <rdfs:label xml:lang="de"
+            >mineralisches Gew&#252;rz</rdfs:label>
+        <rdfs:label xml:lang="en"
+            >mineral condiment</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Gew&#252;rz"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.ag-csw.de/ontologies/gewuerz#pflanzliches_Gew&#252;rz -->
+
+    <owl:Class rdf:about="#pflanzliches_Gew&#252;rz">
+        <rdfs:label xml:lang="de"
+            >pflanzliches Gew&#252;rz</rdfs:label>
+        <rdfs:label xml:lang="en"
+            >herbal condiment</rdfs:label>
+        <rdfs:subClassOf rdf:resource="#Gew&#252;rz"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 2.2.1.1138) http://owlapi.sourceforge.net -->
+
