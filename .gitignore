@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 /bin
 /build
 /test-output
+=======
+build
+*.log
+>>>>>>> 6aeb721570ed01f39a5dd0a49b96fb66a21fb34b
