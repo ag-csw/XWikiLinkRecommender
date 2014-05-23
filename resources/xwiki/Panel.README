@@ -34,17 +34,16 @@ Installation:
 	b. Navigate to the directory <xwiki install dir>/webapps/xwiki/templates.
 	c. Open the file editpanelsvars.vm in a text editor.
 	d. Replace the line:
-		#set($editorPanelsWiki = "Panels.EditModes,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+		#set($editorPanelsWysiwyg = "Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
 	   with:
-	   	#set($editorPanelsWiki = "Panels.EditModes,Panels.CSW Link Panel,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
+	   	#set($editorPanelsWysiwyg = "Panels.DocumentInformation,Panels.CSW Link Panel,Panels.EditTranslations,Panels.SyntaxHelp")
 	e. Save the file and quit the text editor.
-	
-	f. Navigate to the directory <xwiki install dir>/webapps/xwiki/skins/toucan.
-	g. Open the file editpanelsvars.vm in a text editor.
-	h. Replace the line:
-		#set($editorPanelsWiki = "Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
-	   with:
-	   	#set($editorPanelsWiki = "Panels.CSW Link Panel,Panels.DocumentInformation,Panels.EditTranslations,Panels.SyntaxHelp")
-	i. Save the file and quit the text editor.
-	   	
-	k. in case you use the 'colibri' skin, repeat steps f. through i. with the directory <xwiki install dir>/webapps/xwiki/skins/colibri
+
+3. (Alternative to 2.):
+
+    a. make a copy of the file webapps/xwiki/templates/editpanelsvars.vm in a temporary directory
+       (do not change the filename)
+    b. Apply the changes from step 2d. to the copied vrsion of editpanelsvars.vm
+    c. Log in to XWiki as Admin and navigate to the page XWiki.DefaultSkin 
+       (or whatever youractive skin is; XWiki.DefaultSkin is trhe default)
+    d. Upload the modified copy of editpanelsvars.vm as attachment to that page

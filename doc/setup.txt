@@ -1,16 +1,20 @@
 Enable Plug-in in XWiki
-- copy classes to XWIKI_HOME/WEB-INF/classes
+- copy classes to XWIKI_HOME/WEB-INF/classes; e.g. by "ant deploy"
 - modify XWIKI_HOME/WEB-INF/xwiki.cfg; in the section #-# List of active plugins add
   the plug-in class names "de.csw.xwiki.plugin.OntologyPlugin"
-  and "de.csw.xwiki.linkgenerator.plugin.lucene.LucenePlugin"
-- modify  XWIKI_HOME/WEB-INF/struts-config.xml; inside the <action-mapping>  add some lines like:
+  and "de.csw.linkgenerator.plugin.lucene.LucenePlugin"
+- in the same file add the property (or change it if already set):
+    xwiki.authentication.rightsclass=de.csw.xwiki.CSWXWikiCachingRightService
+
+- modify XWIKI_HOME/WEB-INF/struts-config.xml; inside the <action-mapping>  add some lines like:
     <action path="/cswlinks/"
         type="de.csw.linkgenerator.struts.CSWLinkAction"
         name="cswlinks"
         scope="request" />
 
 Eclipse specific
-- the classpath in eclipse is configured for XWiki 1.7.1
+- the classpath in eclipse is configured for XWiki 5.4.4
+- you should set the classpath variable "XWIKI5_HOME" to the root directory of the xwiki-jetty installation
 
 Configure Tomcat for Debugging
 - add the following options to the startup of tomcat
@@ -24,7 +28,7 @@ Configure Tomcat for Debugging
   - Save and run.
 
 Configure Jetty for Debugging
-- in the xWiki package there already exists a start file for debugging
+- in the XWiki package there already exists a start file for debugging
   - some lines corresponding to profiling have to be commented out
 - in eclipse create a new Debug Configuration
   - Go to "Run->Debug Configurations...".
@@ -34,4 +38,6 @@ Configure Jetty for Debugging
   - Save and run.
 
 Documentation
-- xWiki API http://maven.xwiki.org/site/xwiki-core-parent/xwiki-core/apidocs/index.html
+- XWiki API 
+  for scripting: http://platform.xwiki.org/xwiki/bin/view/SRD/Navigation?xpage=embed
+  XWiki core api: http://nexus.xwiki.org/nexus/service/local/repositories/releases/archive/org/xwiki/platform/xwiki-platform-oldcore/5.4.4/xwiki-platform-oldcore-5.4.4-javadoc.jar/!/index.html
