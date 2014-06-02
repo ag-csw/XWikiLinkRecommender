@@ -100,16 +100,14 @@ public class SearchResult
         if (LucenePlugin.DOCTYPE_ATTACHMENT.equals(this.type)) {
             this.filename = doc.get(IndexFields.FILENAME);
             Document document;
-            final String fullDocName =
-                new StringBuffer(this.wiki).append(":").append(this.space).append(".").append(this.name).toString();
             try {
-                document = xwiki.getDocument(fullDocName);
+                document = xwiki.getDocument(documentReference);
                 if (document != null) {
                     this.url = document.getAttachmentURL(this.filename, "download");
                 }
             } catch (XWikiException e) {
                 LOGGER.error("error retrieving url for attachment [{}] of document [{}]", new Object[] {this.filename,
-                fullDocName, e});
+                        this.documentReference, e});
             }
         } else {
             this.objects = doc.getValues("object");
