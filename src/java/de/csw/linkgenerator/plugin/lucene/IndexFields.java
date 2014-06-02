@@ -58,7 +58,7 @@ public abstract class IndexFields
     /**
      * Name of the web the document belongs to
      */
-    public static final String DOCUMENT_WEB = "web";
+    public static final String DOCUMENT_WEB = "space";
 
     /**
      * FullName of the document (example : Main.WebHome)
