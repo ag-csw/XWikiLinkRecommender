@@ -64,6 +64,8 @@ import com.xpn.xwiki.notify.XWikiActionRule;
 import com.xpn.xwiki.plugin.XWikiDefaultPlugin;
 import com.xpn.xwiki.plugin.XWikiPluginInterface;
 
+import de.csw.util.Config;
+
 /**
  * A plugin offering support for advanced searches using Lucene, a high performance, open source
  * search engine. It uses an {@link IndexUpdater} to monitor and submit wiki pages for indexing to
@@ -91,6 +93,9 @@ public class LucenePlugin extends XWikiDefaultPlugin implements XWikiPluginInter
 
     private static final String DEFAULT_ANALYZER =
         "org.apache.lucene.analysis.standard.StandardAnalyzer";
+    
+    private static final int MAX_RESULTS = Config.getIntAppProperty(Config.LUCENE_EDITPROPRESULTS);
+
 
     private static final Log LOG = LogFactory.getLog(LucenePlugin.class);
 
@@ -383,9 +388,9 @@ public class LucenePlugin extends XWikiDefaultPlugin implements XWikiPluginInter
 
         TopDocsCollector< ? extends ScoreDoc> topDocs;
         if (sort != null) {
-            topDocs = TopFieldCollector.create(sort, 5, true, true, false, false);
+            topDocs = TopFieldCollector.create(sort, MAX_RESULTS, true, true, false, false);
         } else {
-            topDocs = TopScoreDocCollector.create(5, false);
+            topDocs = TopScoreDocCollector.create(MAX_RESULTS, false);
         }
         
         // Perform the actual search
