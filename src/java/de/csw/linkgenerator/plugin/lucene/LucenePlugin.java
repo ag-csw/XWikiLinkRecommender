@@ -391,13 +391,7 @@ public class LucenePlugin extends XWikiDefaultPlugin implements XWikiPluginInter
         // Perform the actual search
         searcher.search(q, topDocs);
         
-        if (LOG.isDebugEnabled()) {
-            TopDocs hits = topDocs.topDocs();
-            final int hitcount = hits.totalHits;
-            LOG.debug("query " + q + " returned " + hitcount + " hits");            
-        }
         // Transform the raw Lucene search results into XWiki-aware results
-        
         return new SearchResults(topDocs, searcher,
             new com.xpn.xwiki.api.XWiki(context.getWiki(), context),
             context);
