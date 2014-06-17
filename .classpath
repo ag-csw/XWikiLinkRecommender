@@ -10,7 +10,7 @@
 	<classpathentry kind="lib" path="lib/jena-tdb-0.10.1.jar"/>
 	<classpathentry kind="lib" path="lib/build/pdfbox-1.8.4.jar"/>
 	<classpathentry kind="lib" path="lib/postgresql-8.3-604.jdbc4.jar"/>
-	<classpathentry kind="var" path="XWIKI5_HOME/jetty/lib/servlet-api-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/build/servlet-api-3.0.jar"/>
 	<classpathentry kind="var" path="XWIKI5_HOME/webapps/xwiki/WEB-INF/lib/aether-api-0.9.0.M2.jar"/>
 	<classpathentry kind="var" path="XWIKI5_HOME/webapps/xwiki/WEB-INF/lib/aether-connector-asynchttpclient-0.9.0.M2.jar"/>
 	<classpathentry kind="var" path="XWIKI5_HOME/webapps/xwiki/WEB-INF/lib/aether-connector-file-0.9.0.M2.jar"/>
