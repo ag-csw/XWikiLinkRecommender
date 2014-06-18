@@ -4,5 +4,10 @@ Test, dass content in velocity macros nicht angefasst wird:
 Eine Zwiebel ist $zwiebel
 {{/velocity}}
 {{velocity}}
-Kerbel
+{{html}}
+<b>Kerbel</b>
+{{/html}}
 {{/velocity}}
+{{groovy output="true"}}
+println "Kerbel"
+{{/groovy}}

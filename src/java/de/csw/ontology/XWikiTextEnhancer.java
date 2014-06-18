@@ -122,6 +122,14 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		return result.toString();
 	}
 
+	
+	
+	private static final Pattern[] EXCLUDE_FROM_ENHANCEMENTS = {
+	    Pattern.compile("\\[\\[[^\\]]*\\]\\]"),
+	    Pattern.compile("<csw:linkset.*?>.*?</csw:linkset>"),
+	    Pattern.compile("\\{\\{(velocity|groovy|html).*?\\}\\}.*?\\{\\{/\\1\\}\\}", Pattern.DOTALL)
+	};
+	
 	/**
 	 * Extract from text all phrases that are enclosed by '[' and ']' denoting
 	 * an xWiki link.
@@ -137,28 +145,12 @@ public class XWikiTextEnhancer implements TextEnhancer {
 
 		if (text.isEmpty()) return;
 		
-		Pattern pattern = Pattern.compile("\\[\\[[^\\]]*\\]\\]");
-		Matcher matcher = pattern.matcher(text);
-		
-		while (matcher.find()) {
-			linkIndex.put(matcher.start(), matcher.end());
+		for (Pattern pattern : EXCLUDE_FROM_ENHANCEMENTS) {
+			Matcher matcher = pattern.matcher(text);
+			while (matcher.find()) {
+				linkIndex.put(matcher.start(), matcher.end());
+			}	    
 		}
-
-		pattern = Pattern.compile("<csw:linkset.*?>.*?</csw:linkset>");
-		matcher = pattern.matcher(text);
-		
-		while (matcher.find()) {
-			linkIndex.put(matcher.start(), matcher.end());
-		}
-		
-		// must not try to decorate velocity code - should add more macros
-		pattern = Pattern.compile("\\{\\{velocity.*?\\}\\}.*?\\{\\{/velocity\\}\\}", Pattern.DOTALL);
-		matcher = pattern.matcher(text);
-		
-		while (matcher.find()) {
-			linkIndex.put(matcher.start(), matcher.end());
-		}
-
 	}
 
 	/**
@@ -192,7 +184,7 @@ public class XWikiTextEnhancer implements TextEnhancer {
 			return;
 
 		sb.append("[[").append(term);
-		sb.append(">>url:").append(getSearchURL(matches));
+		sb.append(">>").append(getSearchURL(matches));
 		sb.append("||class=\"similarconcept\"");
 		Iterator<String> it = matches.listIterator(1);
 		sb.append(" title=\"Suche nach den verwandten Begriffen: ").append(it.next());
