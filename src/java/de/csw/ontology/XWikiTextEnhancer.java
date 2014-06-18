@@ -150,6 +150,15 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		while (matcher.find()) {
 			linkIndex.put(matcher.start(), matcher.end());
 		}
+		
+		// must not try to decorate velocity code - should add more macros
+		pattern = Pattern.compile("\\{\\{velocity.*?\\}\\}.*?\\{\\{/velocity\\}\\}", Pattern.DOTALL);
+		matcher = pattern.matcher(text);
+		
+		while (matcher.find()) {
+			linkIndex.put(matcher.start(), matcher.end());
+		}
+
 	}
 
 	/**
