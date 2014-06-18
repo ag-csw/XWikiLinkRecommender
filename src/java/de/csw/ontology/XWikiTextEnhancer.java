@@ -49,6 +49,7 @@ import org.jfree.util.Log;
 import de.csw.lucene.ConceptFilter;
 import de.csw.util.Config;
 import de.csw.util.Token;
+import de.csw.util.URLEncoder;
 
 /**
  * Uses background knowledge to enhance the text.
@@ -136,7 +137,7 @@ public class XWikiTextEnhancer implements TextEnhancer {
 
 		if (text.isEmpty()) return;
 		
-		Pattern pattern = Pattern.compile("\\[[^\\]]*\\]");
+		Pattern pattern = Pattern.compile("\\[\\[[^\\]]*\\]\\]");
 		Matcher matcher = pattern.matcher(text);
 		
 		while (matcher.find()) {
@@ -172,24 +173,26 @@ public class XWikiTextEnhancer implements TextEnhancer {
 	 * 
 	 * @param term
 	 *            a term
-	 * @return annotated term
+	 * @param sb 
+	 *            the string builder the result is appended to
 	 */
-	protected String annotateWithSearch(StringBuilder sb, String term) {
+	protected void annotateWithSearch(StringBuilder sb, String term) {
 		List<String> matches = index.getSimilarMatchLabels(term, MAX_SIMILAR_CONCEPTS);
 
 		if (matches.isEmpty())
-			return term;
+			return;
 
-		sb.append("<a class=\"similarconcept\" title=\"Suche nach den verwandten Begriffen: ");
+		sb.append("[[").append(term);
+		sb.append(">>url:").append(getSearchURL(matches));
+		sb.append("||class=\"similarconcept\"");
 		Iterator<String> it = matches.listIterator(1);
-		sb.append(it.next());
+		sb.append(" title=\"Suche nach den verwandten Begriffen: ").append(it.next());
 		while (it.hasNext()) {
-			sb.append(", " + it.next());
+			sb.append(", ").append(it.next());
 		}
-		sb.append("\" href=\"" + getSearchURL(matches) + "\">");
-		sb.append(term);
-		sb.append("</a>");
-		return sb.toString();
+		sb.append("\"]]");
+		
+		return;
 	}
 
 	/**
@@ -201,6 +204,6 @@ public class XWikiTextEnhancer implements TextEnhancer {
 	 */
 	protected String getSearchURL(Collection<String> terms) {
 		log.debug("** search terms: " + terms);
-		return LUCENE_URL + "?text=" + StringUtils.join(terms, '+');
+		return LUCENE_URL + "?text=" + URLEncoder.encode(StringUtils.join(terms, ' '));
 	}
 }
