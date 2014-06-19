@@ -123,9 +123,9 @@ public class XWikiTextEnhancer implements TextEnhancer {
 	}
 	
 	private static final Pattern[] EXCLUDE_FROM_ENHANCEMENTS = {
-	    Pattern.compile("\\[\\[[^\\]]*\\]\\]"),
-	    Pattern.compile("<csw:linkset.*?>.*?</csw:linkset>"),
-	    Pattern.compile("\\{\\{(velocity|groovy|html).*?\\}\\}.*?\\{\\{/\\1\\}\\}", Pattern.DOTALL)
+		Pattern.compile("\\[\\[[^\\]]*\\]\\]"),
+		Pattern.compile("<csw:linkset.*?>.*?</csw:linkset>"),
+		Pattern.compile("\\{\\{(velocity|groovy|html).*?\\}\\}.*?\\{\\{/\\1\\}\\}", Pattern.DOTALL)
 	};
 	
 	/**
@@ -170,7 +170,6 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		    containingRange = linkIndex.lowerEntry(containingRange.getKey());
 		}
 		return true;
-		// return containingRange == null || (containingRange.getValue() < tokenStart);
 	}
 
 	/**
@@ -191,14 +190,20 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		sb.append("[[").append(term);
 		sb.append(">>").append(getSearchURL(matches));
 		sb.append("||class=\"similarconcept\"");
-		Iterator<String> it = matches.listIterator(1);
-		sb.append(" title=\"Suche nach den verwandten Begriffen: ").append(it.next());
+		Iterator<String> it = matches.listIterator();
+		sb.append(" title=\"Suche nach den verwandten Begriffen: ");
+		boolean afterFirstTerm = false;
 		while (it.hasNext()) {
-			sb.append(", ").append(it.next());
+			String similarTerm = it.next();
+			// FIXME: we would like to exclude the term itself,
+			// but for this we would need to stem it
+			if (!term.equalsIgnoreCase(similarTerm)) {
+				if (afterFirstTerm) { sb.append(", "); }
+				sb.append(similarTerm);
+				afterFirstTerm = true;
+			}
 		}
 		sb.append("\"]]");
-		
-		return;
 	}
 
 	/**
