@@ -121,8 +121,6 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		ga.close();
 		return result.toString();
 	}
-
-	
 	
 	private static final Pattern[] EXCLUDE_FROM_ENHANCEMENTS = {
 	    Pattern.compile("\\[\\[[^\\]]*\\]\\]"),
@@ -155,17 +153,24 @@ public class XWikiTextEnhancer implements TextEnhancer {
 
 	/**
 	 * Test if a token can be annotated by the {@link TextEnhancer}, e.g., if it
-	 * is not a wiki link.
+	 * is not inside an exclude range (e.g. a wiki link).
 	 * 
-	 * @param token
-	 *            a token
+	 * @param offsetAttribute
+	 * 		the offset of the token into the text.
 	 * @return true iff the token can be annotated
 	 */
 	protected boolean isAnnotatable(OffsetAttribute offsetAttribute) {
-		int tokenStart = offsetAttribute.startOffset();
-		Entry<Integer, Integer> floor = linkIndex.floorEntry(tokenStart);
+		final int tokenStart = offsetAttribute.startOffset();
+		Entry<Integer, Integer> containingRange = linkIndex.floorEntry(tokenStart);
 		
-		return floor == null || (floor.getValue() < tokenStart);
+		while (containingRange != null) {
+		    if (containingRange.getValue() >= tokenStart) {
+			return false;
+		    }
+		    containingRange = linkIndex.lowerEntry(containingRange.getKey());
+		}
+		return true;
+		// return containingRange == null || (containingRange.getValue() < tokenStart);
 	}
 
 	/**
