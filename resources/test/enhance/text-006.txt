@@ -1,0 +1,13 @@
+Test, dass content in velocity macros nicht angefasst wird:
+{{velocity wiki="true" html="false"}}
+#set($Zwiebel = "pflanzliches Gewürz")
+Eine Zwiebel ist $zwiebel
+{{/velocity}}
+{{velocity}}
+{{html}}
+<b>Kerbel</b>
+{{/html}}
+{{/velocity}}
+{{groovy output="true"}}
+println "Kerbel"
+{{/groovy}}

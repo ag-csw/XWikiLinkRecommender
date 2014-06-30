@@ -55,10 +55,9 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-import org.apache.poi.ss.formula.ptg.AreaI.OffsetArea;
+import org.apache.lucene.util.AttributeSource;
 
 import de.csw.ontology.OntologyIndex;
-import de.csw.util.Token;
 
 /**
  * A filter that detects concepts from an ontology in the token stream. A
@@ -73,10 +72,16 @@ public final class ConceptFilter extends TokenFilter {
 	/** token type of a concept */
 	public static final String CONCEPT_TYPE = "concept"; 
 
-	OntologyIndex index;
+	private OntologyIndex index;
 
 	/** Tokens that have been read ahead */
-	Queue<Token> queue = new LinkedList<Token>();
+	private final Queue<AttributeSource.State> queue = new LinkedList<AttributeSource.State>();
+
+	/** the attributes of the token which the filter is currently reading */
+	private final CharTermAttribute charTermAttribute;
+	private final OffsetAttribute offsetAttribute;
+	private final TypeAttribute typeAttribute;
+    
 
 	/**
 	 * Build a ConceptFilter that uses a given ontology index
@@ -89,61 +94,78 @@ public final class ConceptFilter extends TokenFilter {
 	public ConceptFilter(TokenStream in, OntologyIndex oi) {
 		super(in);
 		index = oi;
+		
+		charTermAttribute = input.getAttribute(CharTermAttribute.class);
+		offsetAttribute = input.getAttribute(OffsetAttribute.class);
+		typeAttribute = input.getAttribute(TypeAttribute.class);
 	}
 
+	
 	/**
-	 * @return Returns the next token in the stream, or null at EOS
+	 * advances to the next token in the stream.
+	 * Takes into account that terms from the ontology might be constructed
+	 * out of several consecutive tokens.
+	 * @return false at EOS
 	 */
 	@Override
 	public boolean incrementToken() throws IOException {
 
-		if (!input.incrementToken())
+		boolean hasMoreToken = innerNextToken();
+		if (!hasMoreToken) {
 			return false;
-
-		CharTermAttribute charTermAttribute = input.addAttribute(CharTermAttribute.class);
-		OffsetAttribute offsetAttribute = input.addAttribute(OffsetAttribute.class);
-		TypeAttribute typeAttribute = input.addAttribute(TypeAttribute.class);
-		
-		Token reusableToken = new Token(charTermAttribute, offsetAttribute, typeAttribute);
-
-		Token nextToken = queue.isEmpty() ? reusableToken : queue.poll();
-		
-		// check if we got a prefix of a concept (searching the longest match)
-		Token tmpToken;
-		List<String> terms = new ArrayList<String>();
-		terms.add(String.copyValueOf(nextToken.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().length()));
-		int bufferSize = nextToken.getCharTermAttribute().length();
-
-		while (index.isPrefix(terms)) {
-			input.incrementToken();
-			tmpToken = new Token(input.addAttribute(CharTermAttribute.class), input.addAttribute(OffsetAttribute.class), null);
-			// TODO maybe we spoil buffer space using termLength(); is endOffset the right one?
-			bufferSize += tmpToken.getCharTermAttribute().length() + 1;
-			queue.add(tmpToken);
-			terms.add(String.copyValueOf(tmpToken.getCharTermAttribute().buffer(), 0, tmpToken.getCharTermAttribute().length()));
 		}
-		
-		if (index.hasExactMatches(StringUtils.join(terms.toArray(), ' '))) {
-			if (!queue.isEmpty()) {
-				// we have to adjust the token to represent the complete concept
-				nextToken.getCharTermAttribute().resizeBuffer(bufferSize);
-				int destPos = nextToken.getCharTermAttribute().length();
-				// TODO the first one could be ignored since it is nextToken instance
-				for (Token t : queue) {
-					nextToken.getCharTermAttribute().buffer()[destPos] = OntologyIndex.PREFIX_SEPARATOR;
-					nextToken.getOffsetAttribute().setOffset(nextToken.getOffsetAttribute().startOffset(), t.getOffsetAttribute().endOffset());
-					System.arraycopy(t.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().buffer(), destPos + 1, t.getCharTermAttribute().length());
-					destPos += t.getCharTermAttribute().length() + 1;
+
+		Queue<AttributeSource.State> lookAhead = new LinkedList<AttributeSource.State>();
+		List<String> terms = new ArrayList<String>();
+		terms.add(String.copyValueOf(charTermAttribute.buffer(), 0, charTermAttribute.length()));
+
+		while (index.isPrefix(terms) && hasMoreToken) {
+			lookAhead.add(captureState());
+			hasMoreToken = innerNextToken();
+			terms.add(String.copyValueOf(charTermAttribute.buffer(), 0, charTermAttribute.length()));
+		}
+
+		// if we have a match ...
+		if (index.hasExactMatches(StringUtils.join(terms.toArray(), OntologyIndex.PREFIX_SEPARATOR))) {
+
+			// ..then we consume all elements in the look ahead, if present
+			if (!lookAhead.isEmpty()) {
+				int maxEndOffset = offsetAttribute.endOffset();
+				restoreState(lookAhead.poll());
+				terms.remove(0); // already present in current token
+				for (String term : terms) {
+					charTermAttribute.append(OntologyIndex.PREFIX_SEPARATOR);
+					charTermAttribute.append(term);
 				}
-				nextToken.getCharTermAttribute().setLength(bufferSize);
-				queue.clear();
+
+				offsetAttribute.setOffset(offsetAttribute.startOffset(), maxEndOffset);
+			}
+			typeAttribute.setType(CONCEPT_TYPE);
+			if (log.isTraceEnabled()) {
+				log.trace("Concept token recognized: " + String.copyValueOf(charTermAttribute.buffer(), 0, charTermAttribute.length()));
 			}
 			
-			nextToken.getTypeAttribute().setType(CONCEPT_TYPE);
-			log.trace("Concept token recognized: " + String.copyValueOf(nextToken.getCharTermAttribute().buffer(), 0, nextToken.getCharTermAttribute().length()));
+		} else {
+
+			// .. else we push back in the queue the tokens already read
+			if (!lookAhead.isEmpty()) {
+				lookAhead.add(captureState());
+				restoreState(lookAhead.poll());
+				for (AttributeSource.State laterToken : lookAhead) {
+					queue.add(laterToken);
+				}
+			}
 		}
-		
-		return true;
+
+		return hasMoreToken;
+	}
+
+	private boolean innerNextToken() throws IOException {
+		if (!queue.isEmpty()) {
+			restoreState(queue.poll());
+			return true;
+		}
+		return input.incrementToken();
 	}
 
 }

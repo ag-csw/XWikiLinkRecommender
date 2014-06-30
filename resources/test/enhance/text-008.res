@@ -1,0 +1,1 @@
+Ein Satz mit Wurzeln und [[pflanzlichen Gewürzen>>http://wiki.test:8765/xwiki/bin/view/Main/LuceneSearch?text=pflanzliches+Gew%C3%BCrz+Gew%C3%BCrz+K%C3%BCchengew%C3%BCrz+Wurzeln+und+Knollen||class="similarconcept" title="Suche nach den verwandten Begriffen: Gewürz, Küchengewürz, Wurzeln und Knollen"]]. 

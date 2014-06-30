@@ -83,7 +83,7 @@ public class OntologyNotificationRule implements XWikiNotificationRule {
 			
 			String content = orignialDoc != null ? orignialDoc.getContent() : doc.getContent();
 			String enhancedContent = textEnhancer.enhance(content);
-			enhancedContent = linksetRenderer.renderLinks(enhancedContent);
+			// enhancedContent = linksetRenderer.renderLinks(enhancedContent);
 			
 			doc.setContent(enhancedContent);
 		} else if (ACTION_EDIT.equals(action)) {

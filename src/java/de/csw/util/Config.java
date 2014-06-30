@@ -48,6 +48,7 @@ public class Config {
 	public static final String DIR_RESOURCES_TEST = "dir.resources.test";
 	public static final String LUCENE_URL = "lucene.url";
 	public static final String LUCENE_MAXSEARCHTERMS = "lucene.maxsearchterms";
+	public static final String LUCENE_EDITPROPRESULTS = "lucene.editpanel.maxresults";
 	
 	public static final String LANGUAGES = "languages";
 
