@@ -48,7 +48,6 @@ import org.jfree.util.Log;
 
 import de.csw.lucene.ConceptFilter;
 import de.csw.util.Config;
-import de.csw.util.Token;
 import de.csw.util.URLEncoder;
 
 /**
@@ -88,25 +87,21 @@ public class XWikiTextEnhancer implements TextEnhancer {
 			
 			ts = ga.tokenStream("",	 r);
 			
-			CharTermAttribute charTermAttribute;
-			OffsetAttribute offsetAttribute;
-			TypeAttribute typeAttribute;
+			CharTermAttribute charTermAttribute = ts.addAttribute(CharTermAttribute.class);
+			OffsetAttribute offsetAttribute = ts.addAttribute(OffsetAttribute.class);
+			TypeAttribute typeAttribute = ts.addAttribute(TypeAttribute.class);
 			
 			String term;
 			int lastEndIndex = 0;
 			
 			while(ts.incrementToken()) {
 			
-				charTermAttribute = ts.addAttribute(CharTermAttribute.class);
-				offsetAttribute = ts.addAttribute(OffsetAttribute.class);
-				typeAttribute = ts.addAttribute(TypeAttribute.class);
-					
 				result.append(text.substring(lastEndIndex, offsetAttribute.startOffset()));
 				term = String.copyValueOf(charTermAttribute.buffer(), 0, charTermAttribute.length());
 				
 				if (typeAttribute.type().equals(ConceptFilter.CONCEPT_TYPE) && isAnnotatable(offsetAttribute)) {
 					log.debug("Annotating concept: " + term);
-					annotateWithSearch(result, text.substring(offsetAttribute.startOffset(), offsetAttribute.endOffset()));
+					annotateWithSearch(result, text.substring(offsetAttribute.startOffset(), offsetAttribute.endOffset()), term);
 				} else {
 					result.append(text.substring(offsetAttribute.startOffset(), offsetAttribute.endOffset()));
 				}
@@ -176,12 +171,14 @@ public class XWikiTextEnhancer implements TextEnhancer {
 	 * Annotates the term by linking <code>term</code> to the search page of the
 	 * wiki.
 	 * 
-	 * @param term
-	 *            a term
 	 * @param sb 
 	 *            the string builder the result is appended to
+	 * @param term
+	 *            a term
+	 * @param stemBase 
+	 *            the base form of the term
 	 */
-	protected void annotateWithSearch(StringBuilder sb, String term) {
+	protected void annotateWithSearch(StringBuilder sb, String term, String stemBase) {
 		List<String> matches = index.getSimilarMatchLabels(term, MAX_SIMILAR_CONCEPTS);
 
 		if (matches.isEmpty())
@@ -195,9 +192,7 @@ public class XWikiTextEnhancer implements TextEnhancer {
 		boolean afterFirstTerm = false;
 		while (it.hasNext()) {
 			String similarTerm = it.next();
-			// FIXME: we would like to exclude the term itself,
-			// but for this we would need to stem it
-			if (!term.equalsIgnoreCase(similarTerm)) {
+			if (!stemBase.equals(this.index.getStemmer().stem(similarTerm))) {
 				if (afterFirstTerm) { sb.append(", "); }
 				sb.append(similarTerm);
 				afterFirstTerm = true;
