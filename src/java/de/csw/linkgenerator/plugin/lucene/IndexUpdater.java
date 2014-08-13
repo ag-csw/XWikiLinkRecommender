@@ -44,6 +44,7 @@ import org.apache.lucene.index.LogDocMergePolicy;
 import org.apache.lucene.index.LogMergePolicy;
 import org.apache.lucene.index.MergePolicy;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
@@ -321,8 +322,18 @@ public class IndexUpdater extends AbstractXWikiRunnable
             }
 
             try {
-//                this.reader.deleteDocument(id);
-                this.writer.tryDeleteDocument(reader, id);
+                boolean tryDeleteByIdResult = this.writer.tryDeleteDocument(reader, id);
+                if (!tryDeleteByIdResult) {
+                    final String documentId = this.reader.document(id).get(IndexFields.DOCUMENT_ID);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("could not delete document by id " + id + "; try term for "
+                                + documentId + " instead");
+                    }
+                    if (documentId !=null) {
+                        Term docTerm = new Term(IndexFields.DOCUMENT_ID, documentId);
+                        writer.deleteDocuments(docTerm);
+                    }
+                }
                 nb++;
             } catch (IOException e1) {
                 LOG.error("error deleting doc " + id, e1);
