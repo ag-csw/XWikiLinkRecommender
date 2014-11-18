@@ -24,7 +24,7 @@ Installation:
 	e. The uploaded file should now be available in the section "Available files to import" at the upper end of the import page. Click on it.
 	f. A new section "Available documents to import" should become visible. Leave the checkboxes as they are and click "Import".
 	
-	g. repeat the steps c. through f. with the file Panels.CSW+Link+Javascript.xar
+	g. repeat the steps c. through f. with the file Panels.CSW+Link+Javascript.xar and Panels.CSW+Link+Popup+Javascript.xar
 	
 
 2. Activate the panel:
@@ -43,7 +43,7 @@ Installation:
 
     a. make a copy of the file webapps/xwiki/templates/editpanelsvars.vm in a temporary directory
        (do not change the filename)
-    b. Apply the changes from step 2d. to the copied vrsion of editpanelsvars.vm
+    b. Apply the changes from step 2d. to the copied version of editpanelsvars.vm
     c. Log in to XWiki as Admin and navigate to the page XWiki.DefaultSkin 
-       (or whatever youractive skin is; XWiki.DefaultSkin is trhe default)
+       (or whatever your active skin is; XWiki.DefaultSkin is the default)
     d. Upload the modified copy of editpanelsvars.vm as attachment to that page
